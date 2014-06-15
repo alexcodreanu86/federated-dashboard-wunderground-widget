@@ -9,4 +9,4 @@ class Weather.View
     $('[data-id=weather-output]').html(weatherHTML)
 
   @generateHtml: (weatherObj) ->
-    new EJS({url: 'scripts/frontEnd/weather/template.ejs'}).render(weatherObj)
+    new EJS({url: 'scripts/weatherTemplate.ejs'}).render(weatherObj)
