@@ -75,6 +75,26 @@
 (function() {
   namespace('Weather');
 
+  Weather.Template = (function() {
+    function Template() {}
+
+    Template.renderForm = function() {
+      return _.template("<input name=\"weather-search\" type=\"text\"><br>\n<button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n<div data-id=\"weather-output\"></div>");
+    };
+
+    Template.renderCurrentConditions = function(weatherObj) {
+      return _.template("<p><%= display_location.full %> <%= temp_f %>&deg; F</p>\n<p><%= weather %></p>\n<p><img src='<%= icon_url %>'></p>", weatherObj);
+    };
+
+    return Template;
+
+  })();
+
+}).call(this);
+
+(function() {
+  namespace('Weather');
+
   Weather.View = (function() {
     function View() {}
 
@@ -84,26 +104,14 @@
 
     View.showWeather = function(weatherObj) {
       var weatherHTML;
-      weatherHTML = Weather.View.renderCurrentConditions(weatherObj);
+      weatherHTML = Weather.Template.renderCurrentConditions(weatherObj);
       return $('[data-id=weather-output]').html(weatherHTML);
-    };
-
-    View.renderCurrentConditions = function(weatherObj) {
-      return new EJS({
-        url: './scripts/weatherTemplate.ejs'
-      }).render(weatherObj);
     };
 
     View.displayFormIn = function(selector) {
       var formHtml;
-      formHtml = this.renderForm();
+      formHtml = Weather.Template.renderForm();
       return $(selector).html(formHtml);
-    };
-
-    View.renderForm = function() {
-      return new EJS({
-        url: './scripts/formTemplate.ejs'
-      }).render({});
     };
 
     return View;

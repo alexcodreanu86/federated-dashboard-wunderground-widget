@@ -37,12 +37,6 @@
       html = $("[data-id=weather-output]");
       return expect(html).toContainText("Niles IL 77.9° F");
     });
-    it("renderCurrentConditions generates proper html string", function() {
-      var str;
-      str = Weather.View.renderCurrentConditions(weatherObj.current_observation);
-      expect(str).toContainElement('img');
-      return expect(str).toContainText('Niles');
-    });
     return it("appendFormTo appends the weather form to the given container", function() {
       var html;
       setSandbox();
