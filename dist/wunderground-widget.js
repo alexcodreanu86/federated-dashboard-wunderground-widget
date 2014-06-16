@@ -90,7 +90,7 @@
 
     View.renderCurrentConditions = function(weatherObj) {
       return new EJS({
-        url: 'scripts/weatherTemplate.ejs'
+        url: './scripts/weatherTemplate.ejs'
       }).render(weatherObj);
     };
 
@@ -102,7 +102,7 @@
 
     View.renderForm = function() {
       return new EJS({
-        url: 'scripts/formTemplate.ejs'
+        url: './scripts/formTemplate.ejs'
       }).render({});
     };
 
