@@ -1,6 +1,6 @@
 #wunderground-widget
 
-Last version is 0.0.3
+Last version is 0.0.4
 
 To install this package you can just add `wunderground-widget: ">0.0.3"` to your dependencies in your bower.js or by executing `bower install wunderground-widget` in the terminal inside your project directory.
 
