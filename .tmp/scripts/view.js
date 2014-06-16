@@ -16,7 +16,7 @@
 
     View.renderCurrentConditions = function(weatherObj) {
       return new EJS({
-        url: './scripts/weatherTemplate.ejs'
+        url: './bower_components/wunderground-widget/scripts/weatherTemplate.ejs'
       }).render(weatherObj);
     };
 
@@ -28,7 +28,7 @@
 
     View.renderForm = function() {
       return new EJS({
-        url: './scripts/formTemplate.ejs'
+        url: './bower_components/wunderground-widget/scripts/formTemplate.ejs'
       }).render({});
     };
 
