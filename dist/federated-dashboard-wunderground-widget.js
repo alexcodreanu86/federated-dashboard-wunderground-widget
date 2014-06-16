@@ -33,7 +33,7 @@
     };
 
     API.generateUrl = function(zipcode) {
-      return "http://api.wunderground.com/api/" + window.apiKey + "/conditions/q/" + zipcode + ".json";
+      return "http://api.wunderground.com/api/" + this.key + "/conditions/q/" + zipcode + ".json";
     };
 
     return API;
@@ -62,7 +62,7 @@
 
     Controller.setupWidgetIn = function(container, apiKey) {
       Weather.View.displayFormIn(container);
-      window.apiKey = apiKey;
+      Weather.API.key = apiKey;
       return this.bind();
     };
 
@@ -90,7 +90,7 @@
 
     View.renderCurrentConditions = function(weatherObj) {
       return new EJS({
-        url: './bower_components/wunderground-widget/scripts/weatherTemplate.ejs'
+        url: './scripts/weatherTemplate.ejs'
       }).render(weatherObj);
     };
 
@@ -102,7 +102,7 @@
 
     View.renderForm = function() {
       return new EJS({
-        url: './bower_components/wunderground-widget/scripts/formTemplate.ejs'
+        url: './scripts/formTemplate.ejs'
       }).render({});
     };
 

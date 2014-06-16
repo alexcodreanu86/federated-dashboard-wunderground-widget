@@ -55,7 +55,7 @@
     it("setupWidgetIn is assinging the apiKey to a global variable", function() {
       setSandbox();
       Weather.Controller.setupWidgetIn('#sandbox', "123456");
-      return expect(apiKey).toEqual("123456");
+      return expect(Weather.API.key).toEqual("123456");
     });
     return it("setupWidgetIn binds the controller to process searches", function() {
       spyOn(Weather.Controller, 'bind');

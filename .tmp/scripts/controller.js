@@ -18,7 +18,7 @@
 
     Controller.setupWidgetIn = function(container, apiKey) {
       Weather.View.displayFormIn(container);
-      window.apiKey = apiKey;
+      Weather.API.key = apiKey;
       return this.bind();
     };
 

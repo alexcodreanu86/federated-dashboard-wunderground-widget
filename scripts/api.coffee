@@ -9,5 +9,4 @@ class Weather.API
     , "jsonp")
 
   @generateUrl: (zipcode) ->
-    "http://api.wunderground.com/api/#{window.apiKey}/conditions/q/#{zipcode}.json"
-
+    "http://api.wunderground.com/api/#{@key}/conditions/q/#{zipcode}.json"

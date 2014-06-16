@@ -14,7 +14,7 @@
     };
 
     API.generateUrl = function(zipcode) {
-      return "http://api.wunderground.com/api/" + window.apiKey + "/conditions/q/" + zipcode + ".json";
+      return "http://api.wunderground.com/api/" + this.key + "/conditions/q/" + zipcode + ".json";
     };
 
     return API;

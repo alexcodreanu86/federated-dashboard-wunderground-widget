@@ -9,5 +9,5 @@ class Weather.Controller
 
   @setupWidgetIn: (container, apiKey) ->
     Weather.View.displayFormIn(container)
-    window.apiKey = apiKey
+    Weather.API.key = apiKey
     @bind()

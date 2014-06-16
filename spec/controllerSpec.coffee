@@ -48,7 +48,7 @@ describe "Weather.Controller", ->
   it "setupWidgetIn is assinging the apiKey to a global variable", ->
     setSandbox()
     Weather.Controller.setupWidgetIn('#sandbox', "123456")
-    expect(apiKey).toEqual("123456")
+    expect(Weather.API.key).toEqual("123456")
 
   it "setupWidgetIn binds the controller to process searches", ->
     spyOn(Weather.Controller, 'bind')
