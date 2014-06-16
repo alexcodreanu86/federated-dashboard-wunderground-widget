@@ -10,3 +10,8 @@ describe 'Weather.API', ->
     spyOn($, 'get').and.returnValue(weatherObj)
     response = Weather.API.getCurrentConditions('60714')
     expect(response).toEqual(weatherObj)
+
+  it "generateUrl returns a properly formated url", ->
+    window.apiKey = '123456'
+    url = Weather.API.generateUrl('60714')
+    expect(url).toEqual("http://api.wunderground.com/api/123456/conditions/q/60714.json")

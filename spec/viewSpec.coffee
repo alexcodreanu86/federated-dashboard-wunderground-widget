@@ -7,6 +7,13 @@ weatherObj = {  current_observation: {
 inputInto = (name, value)->
   $("[name=#{name}]").val(value)
 
+setSandbox = ->
+  setFixtures(sandbox())
+
+
+appendToSandbox = (html)->
+  $('#sandbox').append(html)
+
 describe "Weather.View", ->
   it "getInput returns the input in the weather-search field", ->
     setFixtures '<input name="weather-search" type="text"><br>'
@@ -19,7 +26,15 @@ describe "Weather.View", ->
     html = $("[data-id=weather-output]")
     expect(html).toContainText("Niles IL 77.9° F")
 
-  it "generateHtml generates proper html string", ->
-    str = Weather.View.generateHtml(weatherObj.current_observation)
+  it "renderCurrentConditions generates proper html string", ->
+    str = Weather.View.renderCurrentConditions(weatherObj.current_observation)
     expect(str).toContainElement('img')
     expect(str).toContainText('Niles')
+
+  it "appendFormTo appends the weather form to the given container", ->
+    setSandbox()
+    Weather.View.displayFormIn('#sandbox')
+    html = $('#sandbox')
+    expect(html).toContainElement('[name=weather-search]')
+    expect(html).toContainElement('[data-id=weather-button]')
+    expect(html).toContainElement('[data-id=weather-output]')

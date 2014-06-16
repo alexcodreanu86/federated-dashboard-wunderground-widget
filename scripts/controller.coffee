@@ -7,3 +7,7 @@ class Weather.Controller
   @getCurrentWeather: (zipcode) ->
     Weather.API.getCurrentConditions(zipcode, Weather.View.showWeather)
 
+  @setupWidgetIn: (container, apiKey) ->
+    Weather.View.displayFormIn(container)
+    window.apiKey = apiKey
+    @bind()

@@ -1,5 +1,5 @@
 (function() {
-  var inputInto, weatherObj;
+  var appendToSandbox, inputInto, setSandbox, weatherObj;
 
   weatherObj = {
     current_observation: {
@@ -16,6 +16,14 @@
     return $("[name=" + name + "]").val(value);
   };
 
+  setSandbox = function() {
+    return setFixtures(sandbox());
+  };
+
+  appendToSandbox = function(html) {
+    return $('#sandbox').append(html);
+  };
+
   describe("Weather.View", function() {
     it("getInput returns the input in the weather-search field", function() {
       setFixtures('<input name="weather-search" type="text"><br>');
@@ -29,11 +37,20 @@
       html = $("[data-id=weather-output]");
       return expect(html).toContainText("Niles IL 77.9° F");
     });
-    return it("generateHtml generates proper html string", function() {
+    it("renderCurrentConditions generates proper html string", function() {
       var str;
-      str = Weather.View.generateHtml(weatherObj.current_observation);
+      str = Weather.View.renderCurrentConditions(weatherObj.current_observation);
       expect(str).toContainElement('img');
       return expect(str).toContainText('Niles');
+    });
+    return it("appendFormTo appends the weather form to the given container", function() {
+      var html;
+      setSandbox();
+      Weather.View.displayFormIn('#sandbox');
+      html = $('#sandbox');
+      expect(html).toContainElement('[name=weather-search]');
+      expect(html).toContainElement('[data-id=weather-button]');
+      return expect(html).toContainElement('[data-id=weather-output]');
     });
   });
 

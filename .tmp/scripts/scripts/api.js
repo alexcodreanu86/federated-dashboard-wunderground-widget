@@ -5,16 +5,10 @@
     function API() {}
 
     API.getCurrentConditions = function(zipcode, callback) {
-      var url;
-      url = this.generateUrl(zipcode);
-      return $.get(url, function(response) {
+      return $.get("http://api.wunderground.com/api/12ba191e2fec98ad/conditions/q/" + zipcode + ".json", function(response) {
         callback(response.current_observation);
         return response;
       }, "jsonp");
-    };
-
-    API.generateUrl = function(zipcode) {
-      return "http://api.wunderground.com/api/" + window.apiKey + "/conditions/q/" + zipcode + ".json";
     };
 
     return API;

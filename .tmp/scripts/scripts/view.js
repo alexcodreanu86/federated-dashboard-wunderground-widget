@@ -20,18 +20,6 @@
       }).render(weatherObj);
     };
 
-    View.displayFormIn = function(selector) {
-      var formHtml;
-      formHtml = this.renderForm();
-      return $(selector).html(formHtml);
-    };
-
-    View.renderForm = function() {
-      return new EJS({
-        url: 'scripts/formTemplate.ejs'
-      }).render({});
-    };
-
     return View;
 
   })();

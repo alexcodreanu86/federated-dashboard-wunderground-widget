@@ -1,5 +1,5 @@
 (function() {
-  var clickOn, inputInto, setupFixtures, weatherObj;
+  var clickOn, inputInto, setSandbox, setupFixtures, weatherObj;
 
   weatherObj = {
     current_observation: {
@@ -24,6 +24,10 @@
     return $(element).click();
   };
 
+  setSandbox = function() {
+    return setFixtures(sandbox());
+  };
+
   describe("Weather.Controller", function() {
     it("the weather is displayed when the button is clicked", function() {
       setupFixtures();
@@ -33,11 +37,30 @@
       clickOn('[data-id=weather-button]');
       return expect($('[data-id=weather-output]').html()).toContainText('Niles');
     });
-    return it("getCurrentWeather calls Weather.API.getCurrentConditions", function() {
+    it("getCurrentWeather calls Weather.API.getCurrentConditions", function() {
       var spy;
       spy = spyOn(Weather.API, 'getCurrentConditions').and.returnValue({});
       Weather.Controller.getCurrentWeather('60714');
       return expect(spy).toHaveBeenCalledWith('60714', Weather.View.showWeather);
+    });
+    it("setupWidgetIn is setting up widget in the desired element", function() {
+      var html;
+      setSandbox();
+      Weather.Controller.setupWidgetIn('#sandbox', "123456");
+      html = $('#sandbox');
+      expect(html).toContainElement('[name=weather-search]');
+      expect(html).toContainElement('[data-id=weather-button]');
+      return expect(html).toContainElement('[data-id=weather-output]');
+    });
+    it("setupWidgetIn is assinging the apiKey to a global variable", function() {
+      setSandbox();
+      Weather.Controller.setupWidgetIn('#sandbox', "123456");
+      return expect(apiKey).toEqual("123456");
+    });
+    return it("setupWidgetIn binds the controller to process searches", function() {
+      spyOn(Weather.Controller, 'bind');
+      Weather.Controller.setupWidgetIn('#sandbox');
+      return expect(Weather.Controller.bind).toHaveBeenCalled();
     });
   });
 

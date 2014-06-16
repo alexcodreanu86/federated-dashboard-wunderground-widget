@@ -18,6 +18,9 @@ inputInto = (name, value)->
 clickOn = (element) ->
   $(element).click()
 
+setSandbox = ->
+  setFixtures(sandbox())
+
 describe "Weather.Controller", ->
 
   it "the weather is displayed when the button is clicked", ->
@@ -33,3 +36,21 @@ describe "Weather.Controller", ->
     spy = spyOn(Weather.API, 'getCurrentConditions').and.returnValue({})
     Weather.Controller.getCurrentWeather('60714')
     expect(spy).toHaveBeenCalledWith('60714', Weather.View.showWeather)
+
+  it "setupWidgetIn is setting up widget in the desired element", ->
+    setSandbox()
+    Weather.Controller.setupWidgetIn('#sandbox', "123456")
+    html = $('#sandbox')
+    expect(html).toContainElement('[name=weather-search]')
+    expect(html).toContainElement('[data-id=weather-button]')
+    expect(html).toContainElement('[data-id=weather-output]')
+
+  it "setupWidgetIn is assinging the apiKey to a global variable", ->
+    setSandbox()
+    Weather.Controller.setupWidgetIn('#sandbox', "123456")
+    expect(apiKey).toEqual("123456")
+
+  it "setupWidgetIn binds the controller to process searches", ->
+    spyOn(Weather.Controller, 'bind')
+    Weather.Controller.setupWidgetIn('#sandbox')
+    expect(Weather.Controller.bind).toHaveBeenCalled()

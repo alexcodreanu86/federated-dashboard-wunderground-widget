@@ -27,9 +27,9 @@ module.exports = function (grunt) {
         seperator: ';'
       },
       dist: {
-        src: ['lib/namespace.js', '.tmp/scripts/form.js', '.tmp/scripts/frontEnd/**/*.js'],
+        src: ['lib/namespace.js', '.tmp/scripts/form.js', '.tmp/scripts/*.js'],
         dest: 'dist/<%= pkg.name %>.js'
-      },
+      }
     },
     uglify: {
       dist: {

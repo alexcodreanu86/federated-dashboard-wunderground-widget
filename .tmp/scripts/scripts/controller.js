@@ -16,12 +16,6 @@
       return Weather.API.getCurrentConditions(zipcode, Weather.View.showWeather);
     };
 
-    Controller.setupWidgetIn = function(container, apiKey) {
-      Weather.View.displayFormIn(container);
-      window.apiKey = apiKey;
-      return this.bind();
-    };
-
     return Controller;
 
   })();
