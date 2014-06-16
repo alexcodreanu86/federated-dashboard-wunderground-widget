@@ -26,10 +26,6 @@ describe "Weather.View", ->
     html = $("[data-id=weather-output]")
     expect(html).toContainText("Niles IL 77.9° F")
 
-  it "renderCurrentConditions generates proper html string", ->
-    str = Weather.View.renderCurrentConditions(weatherObj.current_observation)
-    expect(str).toContainElement('img')
-    expect(str).toContainText('Niles')
 
   it "appendFormTo appends the weather form to the given container", ->
     setSandbox()
