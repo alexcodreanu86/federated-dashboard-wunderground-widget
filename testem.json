@@ -4,7 +4,6 @@
   "src_files": [
     "bower_components/underscore/underscore.js",
     "lib/namespace.js",
-    "lib/ejs.js",
     "bower_components/jquery/dist/jquery.js",
     "bower_components/jasmine-jquery/lib/jasmine-jquery.js",
     ".tmp/scripts/*.js",

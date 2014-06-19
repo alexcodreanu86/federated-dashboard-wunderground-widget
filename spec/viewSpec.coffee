@@ -27,7 +27,7 @@ describe "Weather.View", ->
     expect(html).toContainText("Niles IL 77.9° F")
 
 
-  it "appendFormTo appends the weather form to the given container", ->
+  it "displayFormIn appends the weather form to the given container", ->
     setSandbox()
     Weather.View.displayFormIn('#sandbox')
     html = $('#sandbox')

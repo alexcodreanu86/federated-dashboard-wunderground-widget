@@ -12,10 +12,10 @@
     }
   };
 
-  describe("Weather.Template", function() {
+  describe("Weather.Templates", function() {
     return it("renderCurrentConditions generates proper html string", function() {
       var str;
-      str = Weather.Template.renderCurrentConditions(weatherObj.current_observation);
+      str = Weather.Templates.renderCurrentConditions(weatherObj.current_observation);
       expect(str).toContainElement('img');
       return expect(str).toContainText('Niles');
     });

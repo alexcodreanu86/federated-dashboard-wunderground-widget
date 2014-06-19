@@ -75,18 +75,18 @@
 (function() {
   namespace('Weather');
 
-  Weather.Template = (function() {
-    function Template() {}
+  Weather.Templates = (function() {
+    function Templates() {}
 
-    Template.renderForm = function() {
+    Templates.renderForm = function() {
       return _.template("<input name=\"weather-search\" type=\"text\"><br>\n<button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n<div data-id=\"weather-output\"></div>");
     };
 
-    Template.renderCurrentConditions = function(weatherObj) {
+    Templates.renderCurrentConditions = function(weatherObj) {
       return _.template("<p><%= display_location.full %> <%= temp_f %>&deg; F</p>\n<p><%= weather %></p>\n<p><img src='<%= icon_url %>'></p>", weatherObj);
     };
 
-    return Template;
+    return Templates;
 
   })();
 
@@ -104,13 +104,13 @@
 
     View.showWeather = function(weatherObj) {
       var weatherHTML;
-      weatherHTML = Weather.Template.renderCurrentConditions(weatherObj);
+      weatherHTML = Weather.Templates.renderCurrentConditions(weatherObj);
       return $('[data-id=weather-output]').html(weatherHTML);
     };
 
     View.displayFormIn = function(selector) {
       var formHtml;
-      formHtml = Weather.Template.renderForm();
+      formHtml = Weather.Templates.renderForm();
       return $(selector).html(formHtml);
     };
 

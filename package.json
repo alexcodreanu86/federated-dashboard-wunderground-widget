@@ -12,8 +12,7 @@
     "grunt-contrib-concat": "~0.4.0",
     "grunt-contrib-uglify": "~0.4.0",
     "testem": "~0.6.11",
-    "phantomjs": "~1.9.7",
-    "twitter": "~0.2.9"
+    "phantomjs": "~1.9.7"
   },
   "engines": {
     "node": ">=0.8.0"

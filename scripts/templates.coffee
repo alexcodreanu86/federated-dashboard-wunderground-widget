@@ -1,6 +1,6 @@
 namespace('Weather')
 
-class Weather.Template
+class Weather.Templates
   @renderForm: ->
     _.template("""
                   <input name="weather-search" type="text"><br>

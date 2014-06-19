@@ -1,4 +1,4 @@
-#wunderground-widget
+#Federated Dashboard wunderground-widget
 
 Last version is 0.0.4
 

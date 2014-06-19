@@ -37,7 +37,7 @@
       html = $("[data-id=weather-output]");
       return expect(html).toContainText("Niles IL 77.9° F");
     });
-    return it("appendFormTo appends the weather form to the given container", function() {
+    return it("displayFormIn appends the weather form to the given container", function() {
       var html;
       setSandbox();
       Weather.View.displayFormIn('#sandbox');

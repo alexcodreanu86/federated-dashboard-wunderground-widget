@@ -5,8 +5,8 @@ weatherObj = {  current_observation: {
                 }
               }
 
-describe "Weather.Template", ->
+describe "Weather.Templates", ->
   it "renderCurrentConditions generates proper html string", ->
-    str = Weather.Template.renderCurrentConditions(weatherObj.current_observation)
+    str = Weather.Templates.renderCurrentConditions(weatherObj.current_observation)
     expect(str).toContainElement('img')
     expect(str).toContainText('Niles')
