@@ -7,17 +7,17 @@
     Controller.bind = function() {
       return $('[data-id=weather-button]').click((function(_this) {
         return function() {
-          return _this.getCurrentWeather(Weather.View.getInput());
+          return _this.getCurrentWeather(Weather.Display.getInput());
         };
       })(this));
     };
 
     Controller.getCurrentWeather = function(zipcode) {
-      return Weather.API.getCurrentConditions(zipcode, Weather.View.showWeather);
+      return Weather.API.getCurrentConditions(zipcode, Weather.Display.showWeather);
     };
 
     Controller.setupWidgetIn = function(container, apiKey) {
-      Weather.View.displayFormIn(container);
+      Weather.Display.showFormIn(container);
       Weather.API.key = apiKey;
       return this.bind();
     };

@@ -32,7 +32,7 @@
     it("the weather is displayed when the button is clicked", function() {
       setupFixtures();
       Weather.Controller.bind();
-      spyOn(Weather.API, 'getCurrentConditions').and.returnValue(Weather.View.showWeather(weatherObj.current_observation));
+      spyOn(Weather.API, 'getCurrentConditions').and.returnValue(Weather.Display.showWeather(weatherObj.current_observation));
       inputInto('weather-search', "60714");
       clickOn('[data-id=weather-button]');
       return expect($('[data-id=weather-output]').html()).toContainText('Niles');
@@ -41,7 +41,7 @@
       var spy;
       spy = spyOn(Weather.API, 'getCurrentConditions').and.returnValue({});
       Weather.Controller.getCurrentWeather('60714');
-      return expect(spy).toHaveBeenCalledWith('60714', Weather.View.showWeather);
+      return expect(spy).toHaveBeenCalledWith('60714', Weather.Display.showWeather);
     });
     it("setupWidgetIn is setting up widget in the desired element", function() {
       var html;

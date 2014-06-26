@@ -51,22 +51,61 @@
     Controller.bind = function() {
       return $('[data-id=weather-button]').click((function(_this) {
         return function() {
-          return _this.getCurrentWeather(Weather.View.getInput());
+          return _this.getCurrentWeather(Weather.Display.getInput());
         };
       })(this));
     };
 
     Controller.getCurrentWeather = function(zipcode) {
-      return Weather.API.getCurrentConditions(zipcode, Weather.View.showWeather);
+      return Weather.API.getCurrentConditions(zipcode, Weather.Display.showWeather);
     };
 
     Controller.setupWidgetIn = function(container, apiKey) {
-      Weather.View.displayFormIn(container);
+      Weather.Display.showFormIn(container);
       Weather.API.key = apiKey;
       return this.bind();
     };
 
     return Controller;
+
+  })();
+
+}).call(this);
+
+(function() {
+  namespace('Weather');
+
+  Weather.Display = (function() {
+    function Display() {}
+
+    Display.getInput = function() {
+      return $('[name=weather-search]').val();
+    };
+
+    Display.showWeather = function(weatherObj) {
+      var weatherHTML;
+      weatherHTML = Weather.Templates.renderCurrentConditions(weatherObj);
+      return $('[data-id=weather-output]').html(weatherHTML);
+    };
+
+    Display.showFormIn = function(selector) {
+      var formHtml;
+      formHtml = Weather.Templates.renderForm();
+      return $(selector).html(formHtml);
+    };
+
+    Display.logoSrc = "https://raw.githubusercontent.com/bwvoss/federated-dashboard-wunderground-widget/master/lib/icon_7747/weather_icon.png";
+
+    Display.generateLogo = function(config) {
+      var logoSrc;
+      logoSrc = this.logoSrc;
+      _.extend(config, {
+        imgSrc: logoSrc
+      });
+      return Weather.Templates.renderLogo(config);
+    };
+
+    return Display;
 
   })();
 
@@ -84,6 +123,12 @@
 
     Templates.renderCurrentConditions = function(weatherObj) {
       return _.template("<p><%= display_location.full %> <%= temp_f %>&deg; F</p>\n<p><%= weather %></p>\n<p><img src='<%= icon_url %>'></p>", weatherObj);
+    };
+
+    Templates.renderLogo = function(imgData) {
+      return _.template("<img src='<%= imgData['imgSrc'] %>' data-id='<%= imgData['dataId'] %>' style='width: <%= imgData['width'] %>px'/>", {
+        imgData: imgData
+      });
     };
 
     return Templates;

@@ -2,12 +2,12 @@ namespace('Weather')
 
 class Weather.Controller
   @bind: ->
-    $('[data-id=weather-button]').click( => @getCurrentWeather(Weather.View.getInput()))
+    $('[data-id=weather-button]').click( => @getCurrentWeather(Weather.Display.getInput()))
 
   @getCurrentWeather: (zipcode) ->
-    Weather.API.getCurrentConditions(zipcode, Weather.View.showWeather)
+    Weather.API.getCurrentConditions(zipcode, Weather.Display.showWeather)
 
   @setupWidgetIn: (container, apiKey) ->
-    Weather.View.displayFormIn(container)
+    Weather.Display.showFormIn(container)
     Weather.API.key = apiKey
     @bind()

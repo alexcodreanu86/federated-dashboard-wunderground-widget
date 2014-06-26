@@ -14,3 +14,6 @@ class Weather.Templates
                   <p><%= weather %></p>
                   <p><img src='<%= icon_url %>'></p>
                 """, weatherObj)
+
+   @renderLogo: (imgData) ->
+     _.template("<img src='<%= imgData['imgSrc'] %>' data-id='<%= imgData['dataId'] %>' style='width: <%= imgData['width'] %>px'/>", {imgData: imgData})

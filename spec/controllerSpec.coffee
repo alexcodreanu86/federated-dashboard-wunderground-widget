@@ -27,7 +27,7 @@ describe "Weather.Controller", ->
     setupFixtures()
     Weather.Controller.bind()
 
-    spyOn(Weather.API, 'getCurrentConditions').and.returnValue(Weather.View.showWeather(weatherObj.current_observation))
+    spyOn(Weather.API, 'getCurrentConditions').and.returnValue(Weather.Display.showWeather(weatherObj.current_observation))
     inputInto('weather-search', "60714")
     clickOn('[data-id=weather-button]')
     expect($('[data-id=weather-output]').html()).toContainText('Niles')
@@ -35,7 +35,7 @@ describe "Weather.Controller", ->
   it "getCurrentWeather calls Weather.API.getCurrentConditions", ->
     spy = spyOn(Weather.API, 'getCurrentConditions').and.returnValue({})
     Weather.Controller.getCurrentWeather('60714')
-    expect(spy).toHaveBeenCalledWith('60714', Weather.View.showWeather)
+    expect(spy).toHaveBeenCalledWith('60714', Weather.Display.showWeather)
 
   it "setupWidgetIn is setting up widget in the desired element", ->
     setSandbox()
