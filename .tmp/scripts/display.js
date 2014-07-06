@@ -31,6 +31,14 @@
       return Weather.Templates.renderLogo(config);
     };
 
+    Display.hideForm = function() {
+      return $('[data-id=weather-form]').hide();
+    };
+
+    Display.showForm = function() {
+      return $('[data-id=weather-form]').show();
+    };
+
     return Display;
 
   })();

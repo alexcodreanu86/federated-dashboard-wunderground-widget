@@ -5,7 +5,7 @@
     function Templates() {}
 
     Templates.renderForm = function() {
-      return _.template("<input name=\"weather-search\" type=\"text\"><br>\n<button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n<div data-id=\"weather-output\"></div>");
+      return _.template("<div data-id=weather-widget-wrapper>\n  <div data-id=\"weather-form\">\n    <input name=\"weather-search\" type=\"text\" autofocus=\"true\">\n    <button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n  </div>\n</div>\n<div data-id=\"weather-output\"></div>");
     };
 
     Templates.renderCurrentConditions = function(weatherObj) {

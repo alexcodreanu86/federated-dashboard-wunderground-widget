@@ -18,3 +18,9 @@ class Weather.Display
     logoSrc = @logoSrc
     _.extend(config, {imgSrc: logoSrc})
     Weather.Templates.renderLogo(config)
+
+  @hideForm: ->
+    $('[data-id=weather-form]').hide()
+
+  @showForm: ->
+    $('[data-id=weather-form]').show()

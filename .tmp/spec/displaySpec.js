@@ -46,12 +46,26 @@
       expect(html).toContainElement('[data-id=weather-button]');
       return expect(html).toContainElement('[data-id=weather-output]');
     });
-    return it("generateLogo returns the weather image tag", function() {
+    it("generateLogo returns the weather image tag", function() {
       var imageHtml;
       imageHtml = Weather.Display.generateLogo({
         dataId: "weather-logo"
       });
       return expect(imageHtml).toBeMatchedBy('[data-id=weather-logo]');
+    });
+    it("hideForm hides the form", function() {
+      setSandbox();
+      Weather.Controller.setupWidgetIn('#sandbox');
+      expect($('#sandbox')).toContainElement('[name=weather-search]');
+      Weather.Display.hideForm();
+      return expect($('[data-id=weather-form]').attr('style')).toEqual('display: none;');
+    });
+    return it("showForm displays the form", function() {
+      setSandbox();
+      Weather.Controller.setupWidgetIn('#sandbox');
+      Weather.Display.hideForm();
+      Weather.Display.showForm();
+      return expect($('[data-id=weather-form]').attr('style')).not.toEqual('display: none;');
     });
   });
 

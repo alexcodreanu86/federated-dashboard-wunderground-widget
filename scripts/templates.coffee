@@ -3,8 +3,12 @@ namespace('Weather')
 class Weather.Templates
   @renderForm: ->
     _.template("""
-                  <input name="weather-search" type="text"><br>
-                  <button id="weather" data-id="weather-button">Get current weather</button><br>
+                  <div data-id=weather-widget-wrapper>
+                    <div data-id="weather-form">
+                      <input name="weather-search" type="text" autofocus="true">
+                      <button id="weather" data-id="weather-button">Get current weather</button><br>
+                    </div>
+                  </div>
                   <div data-id="weather-output"></div>
                 """)
 

@@ -38,3 +38,17 @@ describe "Weather.Display", ->
   it "generateLogo returns the weather image tag", ->
     imageHtml = Weather.Display.generateLogo({dataId: "weather-logo"})
     expect(imageHtml).toBeMatchedBy('[data-id=weather-logo]')
+
+  it "hideForm hides the form", ->
+    setSandbox()
+    Weather.Controller.setupWidgetIn('#sandbox')
+    expect($('#sandbox')).toContainElement('[name=weather-search]')
+    Weather.Display.hideForm()
+    expect($('[data-id=weather-form]').attr('style')).toEqual('display: none;')
+
+  it "showForm displays the form", ->
+    setSandbox()
+    Weather.Controller.setupWidgetIn('#sandbox')
+    Weather.Display.hideForm()
+    Weather.Display.showForm()
+    expect($('[data-id=weather-form]').attr('style')).not.toEqual('display: none;')
