@@ -10,6 +10,7 @@
 
     Display.showWeather = function(weatherObj) {
       var weatherHTML;
+      console.log(weatherObj);
       weatherHTML = Weather.Templates.renderCurrentConditions(weatherObj);
       return $('[data-id=weather-output]').html(weatherHTML);
     };

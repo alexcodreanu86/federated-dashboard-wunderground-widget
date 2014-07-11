@@ -84,6 +84,7 @@
 
     Display.showWeather = function(weatherObj) {
       var weatherHTML;
+      console.log(weatherObj);
       weatherHTML = Weather.Templates.renderCurrentConditions(weatherObj);
       return $('[data-id=weather-output]').html(weatherHTML);
     };
@@ -126,7 +127,7 @@
     function Templates() {}
 
     Templates.renderForm = function() {
-      return _.template("<div data-id=weather-widget-wrapper>\n  <div data-id=\"weather-form\">\n    <input name=\"weather-search\" type=\"text\" autofocus=\"true\">\n    <button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n  </div>\n</div>\n<div data-id=\"weather-output\"></div>");
+      return _.template("<div class=\"widget\" data-id=weather-widget-wrapper>\n  <div class=\"widget-header\">\n    <h2 class=\"widget-title\">Weather</h2>\n    <div data-id=\"weather-form\">\n      <input name=\"weather-search\" type=\"text\" autofocus=\"true\">\n      <button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n    </div>\n  </div>\n  <div class=\"widget-body\" data-id=\"weather-output\"></div>\n</div>");
     };
 
     Templates.renderCurrentConditions = function(weatherObj) {
@@ -146,29 +147,28 @@
 }).call(this);
 
 (function() {
-  namespace('Weather');
+  namespace('Weather.Widget');
 
-  Weather.View = (function() {
-    function View() {}
+  Weather.Widget.Controller = (function() {
+    function Controller(container) {
+      this.container = container;
+    }
 
-    View.getInput = function() {
-      return $('[name=weather-search]').val();
+    Controller.prototype.initialize = function() {
+      return $(this.container).append("</h1>REPLACE THIS WITH REAL CONTENT</h1>");
     };
 
-    View.showWeather = function(weatherObj) {
-      var weatherHTML;
-      weatherHTML = Weather.Templates.renderCurrentConditions(weatherObj);
-      return $('[data-id=weather-output]').html(weatherHTML);
+    Controller.prototype.getContainer = function() {
+      return this.container;
     };
 
-    View.displayFormIn = function(selector) {
-      var formHtml;
-      formHtml = Weather.Templates.renderForm();
-      return $(selector).html(formHtml);
-    };
-
-    return View;
+    return Controller;
 
   })();
+
+}).call(this);
+
+(function() {
+
 
 }).call(this);

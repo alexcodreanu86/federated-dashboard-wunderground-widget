@@ -5,6 +5,7 @@ class Weather.Display
     $('[name=weather-search]').val()
 
   @showWeather: (weatherObj) ->
+    console.log(weatherObj)
     weatherHTML = Weather.Templates.renderCurrentConditions(weatherObj)
     $('[data-id=weather-output]').html(weatherHTML)
 
