@@ -1,0 +1,2 @@
+describe "Weather.Widget.Display", ->
+
