@@ -35,6 +35,27 @@
       });
     };
 
+    Controller.closeWidgetInContainer = function(container) {
+      var widget;
+      widget = _.filter(this.widgets, function(widget, index) {
+        return widget.container === container;
+      })[0];
+      if (widget) {
+        this.removeWidgetContent(widget);
+        return this.removeFromWidgetsContainer(widget);
+      }
+    };
+
+    Controller.removeFromWidgetsContainer = function(widgetToRemove) {
+      return this.widgets = _.reject(this.widgets, function(widget) {
+        return widget === widgetToRemove;
+      });
+    };
+
+    Controller.removeWidgetContent = function(widget) {
+      return widget.removeContent();
+    };
+
     return Controller;
 
   })();

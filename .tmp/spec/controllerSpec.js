@@ -64,7 +64,7 @@
       expect($("" + container1 + " [data-id=weather-form]").attr('style')).toEqual('display: none;');
       return expect($("" + container2 + " [data-id=weather-form]").attr('style')).toEqual('display: none;');
     });
-    return it("showForms is showing the forms of all the widgets that are initialized", function() {
+    it("showForms is showing the forms of all the widgets that are initialized", function() {
       resetWidgetsContainer();
       setupTwoContainers();
       Weather.Controller.setupWidgetIn(container1, "123456");
@@ -73,6 +73,23 @@
       Weather.Controller.showForms();
       expect($("" + container1 + " [data-id=weather-form]").attr('style')).not.toEqual('display: none;');
       return expect($("" + container2 + " [data-id=weather-form]").attr('style')).not.toEqual('display: none;');
+    });
+    it("closeWidgetInContainer will eliminate the widget from the given container", function() {
+      resetWidgetsContainer();
+      setupTwoContainers();
+      Weather.Controller.setupWidgetIn(container1, "123456");
+      Weather.Controller.setupWidgetIn(container2, "123456");
+      Weather.Controller.closeWidgetInContainer(container1);
+      expect($("" + container1 + " [data-id=weather-form]")).not.toBeInDOM();
+      return expect($("" + container2 + " [data-id=weather-form]")).toBeInDOM();
+    });
+    return it("closeWidgetInContainer will remove the widget from the widgets container", function() {
+      resetWidgetsContainer();
+      setupTwoContainers();
+      Weather.Controller.setupWidgetIn(container1, "123456");
+      Weather.Controller.setupWidgetIn(container2, "123456");
+      Weather.Controller.closeWidgetInContainer(container1);
+      return expect(Weather.Controller.getWidgets().length).toEqual(1);
     });
   });
 

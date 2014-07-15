@@ -58,3 +58,10 @@ describe "Weather.Widget.Controller", ->
     controller.hideForm()
     controller.showForm()
     expect($("#{container} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
+
+  it "removeContent is removing the widget's content", ->
+    setupOneContainer()
+    controller = newController(container)
+    controller.initialize()
+    controller.removeContent()
+    expect($(container)).not.toContainElement("[data-id=weather-widget-wrapper]")

@@ -20,3 +20,6 @@ class Weather.Widget.Display
 
   showForm: ->
     $("#{@container} [data-id=weather-form]").show()
+
+  removeWidget: ->
+    $("#{@container} [data-id=weather-widget-wrapper]").remove()

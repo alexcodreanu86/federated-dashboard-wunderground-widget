@@ -25,3 +25,18 @@ class Weather.Controller
       widget[command]()
     )
 
+  @closeWidgetInContainer: (container) ->
+    widget = _.filter(@widgets, (widget, index) ->
+      widget.container == container
+    )[0]
+    if widget
+      @removeWidgetContent(widget)
+      @removeFromWidgetsContainer(widget)
+
+  @removeFromWidgetsContainer: (widgetToRemove) ->
+    @widgets = _.reject(@widgets, (widget) ->
+      return widget == widgetToRemove
+    )
+
+  @removeWidgetContent: (widget) ->
+    widget.removeContent()

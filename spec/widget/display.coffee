@@ -66,3 +66,10 @@ describe "Weather.Widget.Display", ->
     display.hideForm()
     display.showForm()
     expect($("#{container1} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
+
+  it "removeWidget is removing the widget's content", ->
+    setupOneContainer()
+    display = newDisplay(container1)
+    display.setupWidget()
+    display.removeWidget()
+    expect($(container1)).not.toContainElement("[data-id=weather-widget-wrapper]")

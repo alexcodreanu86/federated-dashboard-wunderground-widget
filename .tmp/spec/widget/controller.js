@@ -69,7 +69,7 @@
       controller.hideForm();
       return expect($("" + container + " [data-id=weather-form]").attr('style')).toEqual('display: none;');
     });
-    return it("showForm is showing the form", function() {
+    it("showForm is showing the form", function() {
       var controller;
       setupOneContainer();
       controller = newController(container);
@@ -77,6 +77,14 @@
       controller.hideForm();
       controller.showForm();
       return expect($("" + container + " [data-id=weather-form]").attr('style')).not.toEqual('display: none;');
+    });
+    return it("removeContent is removing the widget's content", function() {
+      var controller;
+      setupOneContainer();
+      controller = newController(container);
+      controller.initialize();
+      controller.removeContent();
+      return expect($(container)).not.toContainElement("[data-id=weather-widget-wrapper]");
     });
   });
 

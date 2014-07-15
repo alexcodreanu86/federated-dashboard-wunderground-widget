@@ -72,7 +72,7 @@
       display.hideForm();
       return expect($("" + container1 + " [data-id=weather-form]").attr('style')).toEqual('display: none;');
     });
-    return it("showForm is showing the form", function() {
+    it("showForm is showing the form", function() {
       var display;
       setupOneContainer();
       display = newDisplay(container1);
@@ -80,6 +80,14 @@
       display.hideForm();
       display.showForm();
       return expect($("" + container1 + " [data-id=weather-form]").attr('style')).not.toEqual('display: none;');
+    });
+    return it("removeWidget is removing the widget's content", function() {
+      var display;
+      setupOneContainer();
+      display = newDisplay(container1);
+      display.setupWidget();
+      display.removeWidget();
+      return expect($(container1)).not.toContainElement("[data-id=weather-widget-wrapper]");
     });
   });
 

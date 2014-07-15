@@ -27,3 +27,6 @@ class Weather.Widget.Controller
 
   showForm: ->
     @display.showForm()
+
+  removeContent: ->
+    @display.removeWidget()

@@ -47,6 +47,10 @@
       return this.display.showForm();
     };
 
+    Controller.prototype.removeContent = function() {
+      return this.display.removeWidget();
+    };
+
     return Controller;
 
   })();

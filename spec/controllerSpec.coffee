@@ -63,3 +63,19 @@ describe "Weather.Controller", ->
     expect($("#{container1} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
     expect($("#{container2} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
 
+  it "closeWidgetInContainer will eliminate the widget from the given container", ->
+    resetWidgetsContainer()
+    setupTwoContainers()
+    Weather.Controller.setupWidgetIn(container1, "123456")
+    Weather.Controller.setupWidgetIn(container2, "123456")
+    Weather.Controller.closeWidgetInContainer(container1)
+    expect($("#{container1} [data-id=weather-form]")).not.toBeInDOM()
+    expect($("#{container2} [data-id=weather-form]")).toBeInDOM()
+
+  it "closeWidgetInContainer will remove the widget from the widgets container", ->
+    resetWidgetsContainer()
+    setupTwoContainers()
+    Weather.Controller.setupWidgetIn(container1, "123456")
+    Weather.Controller.setupWidgetIn(container2, "123456")
+    Weather.Controller.closeWidgetInContainer(container1)
+    expect(Weather.Controller.getWidgets().length).toEqual(1)

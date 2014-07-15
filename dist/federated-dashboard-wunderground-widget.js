@@ -79,6 +79,27 @@
       });
     };
 
+    Controller.closeWidgetInContainer = function(container) {
+      var widget;
+      widget = _.filter(this.widgets, function(widget, index) {
+        return widget.container === container;
+      })[0];
+      if (widget) {
+        this.removeWidgetContent(widget);
+        return this.removeFromWidgetsContainer(widget);
+      }
+    };
+
+    Controller.removeFromWidgetsContainer = function(widgetToRemove) {
+      return this.widgets = _.reject(this.widgets, function(widget) {
+        return widget === widgetToRemove;
+      });
+    };
+
+    Controller.removeWidgetContent = function(widget) {
+      return widget.removeContent();
+    };
+
     return Controller;
 
   })();
@@ -183,6 +204,10 @@
       return this.display.showForm();
     };
 
+    Controller.prototype.removeContent = function() {
+      return this.display.removeWidget();
+    };
+
     return Controller;
 
   })();
@@ -219,6 +244,10 @@
 
     Display.prototype.showForm = function() {
       return $("" + this.container + " [data-id=weather-form]").show();
+    };
+
+    Display.prototype.removeWidget = function() {
+      return $("" + this.container + " [data-id=weather-widget-wrapper]").remove();
     };
 
     return Display;

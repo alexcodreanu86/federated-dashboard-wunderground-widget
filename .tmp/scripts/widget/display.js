@@ -30,6 +30,10 @@
       return $("" + this.container + " [data-id=weather-form]").show();
     };
 
+    Display.prototype.removeWidget = function() {
+      return $("" + this.container + " [data-id=weather-widget-wrapper]").remove();
+    };
+
     return Display;
 
   })();
