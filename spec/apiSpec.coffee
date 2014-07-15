@@ -5,13 +5,18 @@ weatherObj = {  current_observation: {
                 }
               }
 
+firstArgumentOfFirstCall = (spy) ->
+  spy.calls.argsFor(0)[0]
+
 describe 'Weather.API', ->
   it "getCurrentConditions returns current conditions for the argument zipcode", ->
-    spyOn($, 'get').and.returnValue(weatherObj)
-    response = Weather.API.getCurrentConditions('60714')
+    spy = spyOn($, 'get').and.returnValue(weatherObj)
+    data = {key: '123456', zipcode: '60714'}
+    response = Weather.API.getCurrentConditions(data)
     expect(response).toEqual(weatherObj)
+    expect(firstArgumentOfFirstCall(spy)).toEqual("http://api.wunderground.com/api/123456/conditions/q/60714.json")
 
   it "generateUrl returns a properly formated url", ->
-    Weather.API.key = '123456'
-    url = Weather.API.generateUrl('60714')
+    data = {key: '123456', zipcode: '60714'}
+    url = Weather.API.generateUrl(data)
     expect(url).toEqual("http://api.wunderground.com/api/123456/conditions/q/60714.json")

@@ -1,12 +1,12 @@
 namespace('Weather')
 
 class Weather.API
-  @getCurrentConditions: (zipcode, callback) ->
-    url = @generateUrl(zipcode)
+  @getCurrentConditions: (requestData, displayer) ->
+    url = @generateUrl(requestData)
     $.get(url, (response) ->
-      callback(response.current_observation)
+      displayer.showCurrentWeather(response.current_observation)
       response
     , "jsonp")
 
-  @generateUrl: (zipcode) ->
-    "http://api.wunderground.com/api/#{@key}/conditions/q/#{zipcode}.json"
+  @generateUrl: (data) ->
+    "http://api.wunderground.com/api/#{data.key}/conditions/q/#{data.zipcode}.json"

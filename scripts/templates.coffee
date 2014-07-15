@@ -1,7 +1,7 @@
 namespace('Weather')
 
 class Weather.Templates
-  @renderForm: ->
+  @renderForm: (widgetData) ->
     _.template("""
                   <div class="widget" data-id="weather-widget-wrapper">
                     <div class="widget-header">

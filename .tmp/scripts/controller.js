@@ -4,22 +4,35 @@
   Weather.Controller = (function() {
     function Controller() {}
 
-    Controller.bind = function() {
-      return $('[data-id=weather-button]').click((function(_this) {
-        return function() {
-          return _this.getCurrentWeather(Weather.Display.getInput());
-        };
-      })(this));
-    };
-
-    Controller.getCurrentWeather = function(zipcode) {
-      return Weather.API.getCurrentConditions(zipcode, Weather.Display.showWeather);
-    };
+    Controller.widgets = [];
 
     Controller.setupWidgetIn = function(container, apiKey) {
-      Weather.Display.showFormIn(container);
-      Weather.API.key = apiKey;
-      return this.bind();
+      var widget;
+      widget = new Weather.Widget.Controller(container, apiKey);
+      widget.initialize();
+      return this.addToWidgetsContainer(widget);
+    };
+
+    Controller.addToWidgetsContainer = function(widget) {
+      return this.widgets.push(widget);
+    };
+
+    Controller.getWidgets = function() {
+      return this.widgets;
+    };
+
+    Controller.hideForms = function() {
+      return this.allWidgetsExecute("hideForm");
+    };
+
+    Controller.showForms = function() {
+      return this.allWidgetsExecute("showForm");
+    };
+
+    Controller.allWidgetsExecute = function(command) {
+      return _.each(this.widgets, function(widget) {
+        return widget[command]();
+      });
     };
 
     return Controller;

@@ -1,11 +1,29 @@
 namespace('Weather.Widget')
 
 class Weather.Widget.Controller
-  constructor: (container) ->
+  apiKey = undefined
+  constructor: (container, key) ->
+    apiKey = key
     @container = container
+    @display = new Weather.Widget.Display(container)
 
   initialize: ->
-    $(@container).append("</h1>REPLACE THIS WITH REAL CONTENT</h1>")
+    @display.setupWidget()
+    @bind()
 
   getContainer: ->
     @container
+
+  bind: ->
+    $("#{@container} [data-id=weather-button]").click(=> @processClickedButton())
+
+  processClickedButton: ->
+    input = @display.getInput()
+    requestData = {key: apiKey, zipcode: input}
+    Weather.API.getCurrentConditions(requestData, @display)
+
+  hideForm: ->
+    @display.hideForm()
+
+  showForm: ->
+    @display.showForm()

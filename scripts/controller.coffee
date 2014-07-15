@@ -1,13 +1,27 @@
 namespace('Weather')
 
 class Weather.Controller
-  @bind: ->
-    $('[data-id=weather-button]').click( => @getCurrentWeather(Weather.Display.getInput()))
-
-  @getCurrentWeather: (zipcode) ->
-    Weather.API.getCurrentConditions(zipcode, Weather.Display.showWeather)
+  @widgets: []
 
   @setupWidgetIn: (container, apiKey) ->
-    Weather.Display.showFormIn(container)
-    Weather.API.key = apiKey
-    @bind()
+    widget = new Weather.Widget.Controller(container, apiKey)
+    widget.initialize()
+    @addToWidgetsContainer(widget)
+
+  @addToWidgetsContainer: (widget) ->
+    @widgets.push(widget)
+
+  @getWidgets: ->
+    @widgets
+
+  @hideForms: ->
+    @allWidgetsExecute("hideForm")
+
+  @showForms: ->
+    @allWidgetsExecute("showForm")
+
+  @allWidgetsExecute: (command) ->
+    _.each(@widgets, (widget) ->
+      widget[command]()
+    )
+

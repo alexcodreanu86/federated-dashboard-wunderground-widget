@@ -1,5 +1,5 @@
 (function() {
-  var weatherObj;
+  var firstArgumentOfFirstCall, weatherObj;
 
   weatherObj = {
     current_observation: {
@@ -12,17 +12,29 @@
     }
   };
 
+  firstArgumentOfFirstCall = function(spy) {
+    return spy.calls.argsFor(0)[0];
+  };
+
   describe('Weather.API', function() {
     it("getCurrentConditions returns current conditions for the argument zipcode", function() {
-      var response;
-      spyOn($, 'get').and.returnValue(weatherObj);
-      response = Weather.API.getCurrentConditions('60714');
-      return expect(response).toEqual(weatherObj);
+      var data, response, spy;
+      spy = spyOn($, 'get').and.returnValue(weatherObj);
+      data = {
+        key: '123456',
+        zipcode: '60714'
+      };
+      response = Weather.API.getCurrentConditions(data);
+      expect(response).toEqual(weatherObj);
+      return expect(firstArgumentOfFirstCall(spy)).toEqual("http://api.wunderground.com/api/123456/conditions/q/60714.json");
     });
     return it("generateUrl returns a properly formated url", function() {
-      var url;
-      Weather.API.key = '123456';
-      url = Weather.API.generateUrl('60714');
+      var data, url;
+      data = {
+        key: '123456',
+        zipcode: '60714'
+      };
+      url = Weather.API.generateUrl(data);
       return expect(url).toEqual("http://api.wunderground.com/api/123456/conditions/q/60714.json");
     });
   });

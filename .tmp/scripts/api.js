@@ -4,17 +4,17 @@
   Weather.API = (function() {
     function API() {}
 
-    API.getCurrentConditions = function(zipcode, callback) {
+    API.getCurrentConditions = function(requestData, displayer) {
       var url;
-      url = this.generateUrl(zipcode);
+      url = this.generateUrl(requestData);
       return $.get(url, function(response) {
-        callback(response.current_observation);
+        displayer.showCurrentWeather(response.current_observation);
         return response;
       }, "jsonp");
     };
 
-    API.generateUrl = function(zipcode) {
-      return "http://api.wunderground.com/api/" + this.key + "/conditions/q/" + zipcode + ".json";
+    API.generateUrl = function(data) {
+      return "http://api.wunderground.com/api/" + data.key + "/conditions/q/" + data.zipcode + ".json";
     };
 
     return API;

@@ -5,39 +5,32 @@ weatherObj = {  current_observation: {
                 }
               }
 
-setupFixtures = ->
-  setFixtures """
-                <input name="weather-search" type="text"><br>
-                <button data-id="weather-button">Get current weather</button><br>
-                <div data-id="weather-output"></div>
-              """
-
-inputInto = (name, value)->
-  $("[name=#{name}]").val(value)
-
 clickOn = (element) ->
   $(element).click()
+
+resetWidgetsContainer = ->
+  Weather.Controller.widgets = []
 
 setSandbox = ->
   setFixtures(sandbox())
 
+setupTwoContainers = ->
+  setFixtures """
+    <div data-id='widget-container-1'></div>
+    <div data-id='widget-container-2'></div>
+  """
+
+container1 = "[data-id=widget-container-1]"
+container2 = "[data-id=widget-container-2]"
+
 describe "Weather.Controller", ->
+  it "widgets container is empty on initialization", ->
+    resetWidgetsContainer()
+    container = Weather.Controller.getWidgets()
+    expect(container.length).toBe(0)
 
-  it "the weather is displayed when the button is clicked", ->
-    setupFixtures()
-    Weather.Controller.bind()
-
-    spyOn(Weather.API, 'getCurrentConditions').and.returnValue(Weather.Display.showWeather(weatherObj.current_observation))
-    inputInto('weather-search', "60714")
-    clickOn('[data-id=weather-button]')
-    expect($('[data-id=weather-output]').html()).toContainText('Niles')
-
-  it "getCurrentWeather calls Weather.API.getCurrentConditions", ->
-    spy = spyOn(Weather.API, 'getCurrentConditions').and.returnValue({})
-    Weather.Controller.getCurrentWeather('60714')
-    expect(spy).toHaveBeenCalledWith('60714', Weather.Display.showWeather)
-
-  it "setupWidgetIn is setting up widget in the desired element", ->
+  it "setupWidgetIn is setting up a widget instance in the desired element", ->
+    resetWidgetsContainer()
     setSandbox()
     Weather.Controller.setupWidgetIn('#sandbox', "123456")
     html = $('#sandbox')
@@ -45,12 +38,28 @@ describe "Weather.Controller", ->
     expect(html).toContainElement('[data-id=weather-button]')
     expect(html).toContainElement('[data-id=weather-output]')
 
-  it "setupWidgetIn is assinging the apiKey to a global variable", ->
+  it "setupWidgetIn is adding the initialized widget to the widgets container", ->
+    resetWidgetsContainer()
     setSandbox()
     Weather.Controller.setupWidgetIn('#sandbox', "123456")
-    expect(Weather.API.key).toEqual("123456")
+    expect(Weather.Controller.getWidgets().length).toEqual(1)
 
-  it "setupWidgetIn binds the controller to process searches", ->
-    spyOn(Weather.Controller, 'bind')
-    Weather.Controller.setupWidgetIn('#sandbox')
-    expect(Weather.Controller.bind).toHaveBeenCalled()
+  it "hideForms is hiding the forms of all the widgets that are initialized", ->
+    resetWidgetsContainer()
+    setupTwoContainers()
+    Weather.Controller.setupWidgetIn(container1, "123456")
+    Weather.Controller.setupWidgetIn(container2, "123456")
+    Weather.Controller.hideForms()
+    expect($("#{container1} [data-id=weather-form]").attr('style')).toEqual('display: none;')
+    expect($("#{container2} [data-id=weather-form]").attr('style')).toEqual('display: none;')
+
+  it "showForms is showing the forms of all the widgets that are initialized", ->
+    resetWidgetsContainer()
+    setupTwoContainers()
+    Weather.Controller.setupWidgetIn(container1, "123456")
+    Weather.Controller.setupWidgetIn(container2, "123456")
+    Weather.Controller.hideForms()
+    Weather.Controller.showForms()
+    expect($("#{container1} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
+    expect($("#{container2} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
+
