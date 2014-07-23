@@ -79,3 +79,13 @@ describe "Weather.Controller", ->
     Weather.Controller.setupWidgetIn(container2, "123456")
     Weather.Controller.closeWidgetInContainer(container1)
     expect(Weather.Controller.getWidgets().length).toEqual(1)
+
+  it "allWidgetsExecute is removing the inactive widgets", ->
+    resetWidgetsContainer()
+    setupTwoContainers()
+    Weather.Controller.setupWidgetIn(container1, "123456")
+    Weather.Controller.setupWidgetIn(container2, "123456")
+    Weather.Controller.widgets[0].setAsInactive()
+    Weather.Controller.allWidgetsExecute('hideForm')
+    expect(Weather.Controller.widgets.length).toBe(1)
+

@@ -50,9 +50,9 @@
 
     Controller.widgets = [];
 
-    Controller.setupWidgetIn = function(container, apiKey) {
+    Controller.setupWidgetIn = function(container, apiKey, defaultValue) {
       var widget;
-      widget = new Weather.Widget.Controller(container, apiKey);
+      widget = new Weather.Widgets.Controller(container, apiKey, defaultValue);
       widget.initialize();
       return this.addToWidgetsContainer(widget);
     };
@@ -74,9 +74,15 @@
     };
 
     Controller.allWidgetsExecute = function(command) {
-      return _.each(this.widgets, function(widget) {
-        return widget[command]();
-      });
+      return _.each(this.widgets, (function(_this) {
+        return function(widget) {
+          if (widget.isActive()) {
+            return widget[command]();
+          } else {
+            return _this.removeFromWidgetsContainer(widget);
+          }
+        };
+      })(this));
     };
 
     Controller.closeWidgetInContainer = function(container) {
@@ -85,7 +91,7 @@
         return widget.container === container;
       })[0];
       if (widget) {
-        this.removeWidgetContent(widget);
+        this.closeWidget(widget);
         return this.removeFromWidgetsContainer(widget);
       }
     };
@@ -96,8 +102,8 @@
       });
     };
 
-    Controller.removeWidgetContent = function(widget) {
-      return widget.removeContent();
+    Controller.closeWidget = function(widget) {
+      return widget.closeWidget();
     };
 
     return Controller;
@@ -135,14 +141,6 @@
   Weather.Templates = (function() {
     function Templates() {}
 
-    Templates.renderForm = function(widgetData) {
-      return _.template("<div class=\"widget\" data-id=\"weather-widget-wrapper\">\n  <div class=\"widget-header\">\n    <h2 class=\"widget-title\">Weather</h2>\n    <div class=\"widget-form\" data-id=\"weather-form\">\n      <input name=\"weather-search\" type=\"text\" autofocus=\"true\">\n      <button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n    </div>\n  </div>\n  <div class=\"widget-body\" data-id=\"weather-output\"></div>\n</div>");
-    };
-
-    Templates.renderCurrentConditions = function(weatherObj) {
-      return _.template("<p><%= display_location.full %> <%= temp_f %>&deg; F</p>\n<p><%= weather %></p>\n<p><img src='<%= icon_url %>'></p>", weatherObj);
-    };
-
     Templates.renderLogo = function(imgData) {
       return _.template("<img src='<%= imgData['imgSrc'] %>' data-id='<%= imgData['dataId'] %>' style='width: <%= imgData['width'] %>px'/>", {
         imgData: imgData
@@ -156,44 +154,112 @@
 }).call(this);
 
 (function() {
-  namespace('Weather.Widget');
+  namespace('Weather.Widgets');
 
-  Weather.Widget.Controller = (function() {
+  Weather.Widgets.API = (function() {
+    function API() {}
+
+    API.getCurrentConditions = function(requestData, displayer) {
+      var url;
+      url = this.generateUrl(requestData);
+      return $.get(url, function(response) {
+        displayer.showCurrentWeather(response.current_observation);
+        return response;
+      }, "jsonp");
+    };
+
+    API.generateUrl = function(data) {
+      return "http://api.wunderground.com/api/" + data.key + "/conditions/q/" + data.location + ".json";
+    };
+
+    return API;
+
+  })();
+
+}).call(this);
+
+(function() {
+  namespace('Weather.Widgets');
+
+  Weather.Widgets.Controller = (function() {
     var apiKey;
 
     apiKey = void 0;
 
-    function Controller(container, key) {
+    function Controller(container, key, defaultValue) {
       apiKey = key;
       this.container = container;
-      this.display = new Weather.Widget.Display(container);
+      this.display = new Weather.Widgets.Display(container);
+      this.activeStatus = false;
+      this.defaultValue = defaultValue;
     }
 
     Controller.prototype.initialize = function() {
       this.display.setupWidget();
-      return this.bind();
+      this.bind();
+      this.displayDefault();
+      return this.setAsActive();
     };
 
-    Controller.prototype.getContainer = function() {
-      return this.container;
+    Controller.prototype.displayDefault = function() {
+      if (this.defaultValue) {
+        return this.displayCurrentConditions(this.defaultValue);
+      }
+    };
+
+    Controller.prototype.setAsActive = function() {
+      return this.activeStatus = true;
+    };
+
+    Controller.prototype.setAsInactive = function() {
+      return this.activeStatus = false;
+    };
+
+    Controller.prototype.isActive = function() {
+      return this.activeStatus;
     };
 
     Controller.prototype.bind = function() {
-      return $("" + this.container + " [data-id=weather-button]").click((function(_this) {
+      $("" + this.container + " [data-id=weather-button]").click((function(_this) {
         return function() {
           return _this.processClickedButton();
+        };
+      })(this));
+      return $("" + this.container + " [data-id=weather-close]").click((function(_this) {
+        return function() {
+          return _this.closeWidget();
         };
       })(this));
     };
 
     Controller.prototype.processClickedButton = function() {
-      var input, requestData;
+      var input;
       input = this.display.getInput();
+      return this.displayCurrentConditions(input);
+    };
+
+    Controller.prototype.displayCurrentConditions = function(input) {
+      var requestData;
       requestData = {
         key: apiKey,
-        zipcode: input
+        location: input
       };
-      return Weather.API.getCurrentConditions(requestData, this.display);
+      return Weather.Widgets.API.getCurrentConditions(requestData, this.display);
+    };
+
+    Controller.prototype.closeWidget = function() {
+      this.unbind();
+      this.removeContent();
+      return this.setAsInactive();
+    };
+
+    Controller.prototype.removeContent = function() {
+      return this.display.removeWidget();
+    };
+
+    Controller.prototype.unbind = function() {
+      $("" + this.container + " [data-id=weather-button]").unbind('click');
+      return $("" + this.container + " [data-id=weather-close]").unbind('click');
     };
 
     Controller.prototype.hideForm = function() {
@@ -204,8 +270,8 @@
       return this.display.showForm();
     };
 
-    Controller.prototype.removeContent = function() {
-      return this.display.removeWidget();
+    Controller.prototype.getContainer = function() {
+      return this.container;
     };
 
     return Controller;
@@ -217,14 +283,14 @@
 (function() {
   namespace("Weather.Widget");
 
-  Weather.Widget.Display = (function() {
+  Weather.Widgets.Display = (function() {
     function Display(container) {
       this.container = container;
     }
 
     Display.prototype.setupWidget = function() {
       var widgetHtml;
-      widgetHtml = Weather.Templates.renderForm();
+      widgetHtml = Weather.Widgets.Templates.renderForm();
       return $(this.container).append(widgetHtml);
     };
 
@@ -234,7 +300,7 @@
 
     Display.prototype.showCurrentWeather = function(weatherObj) {
       var weatherHtml;
-      weatherHtml = Weather.Templates.renderCurrentConditions(weatherObj);
+      weatherHtml = Weather.Widgets.Templates.renderCurrentConditions(weatherObj);
       return $("" + this.container + " [data-id=weather-output]").html(weatherHtml);
     };
 
@@ -247,7 +313,7 @@
     };
 
     Display.prototype.removeWidget = function() {
-      return $("" + this.container + " [data-id=weather-widget-wrapper]").remove();
+      return $(this.container).remove();
     };
 
     return Display;
@@ -257,6 +323,21 @@
 }).call(this);
 
 (function() {
+  namespace("Weather.Widgets");
 
+  Weather.Widgets.Templates = (function() {
+    function Templates() {}
+
+    Templates.renderForm = function(widgetData) {
+      return _.template("<div class=\"widget\" data-id=\"weather-widget-wrapper\">\n  <div class=\"widget-header\">\n    <h2 class=\"widget-title\">Weather</h2>\n    <span class='widget-close' data-id='weather-close'>×</span>\n    <div class=\"widget-form\" data-id=\"weather-form\">\n      <input name=\"weather-search\" type=\"text\" autofocus=\"true\">\n      <button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n    </div>\n  </div>\n  <div class=\"widget-body\" data-id=\"weather-output\"></div>\n</div>");
+    };
+
+    Templates.renderCurrentConditions = function(weatherObj) {
+      return _.template("<p><%= display_location.full %> <%= temp_f %>&deg; F</p>\n<p><%= weather %></p>\n<p><img src='<%= icon_url %>'></p>", weatherObj);
+    };
+
+    return Templates;
+
+  })();
 
 }).call(this);

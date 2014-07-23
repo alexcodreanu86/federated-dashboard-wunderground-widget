@@ -1,6 +1,6 @@
-namespace('Weather')
+namespace('Weather.Widgets')
 
-class Weather.API
+class Weather.Widgets.API
   @getCurrentConditions: (requestData, displayer) ->
     url = @generateUrl(requestData)
     $.get(url, (response) ->
@@ -9,4 +9,4 @@ class Weather.API
     , "jsonp")
 
   @generateUrl: (data) ->
-    "http://api.wunderground.com/api/#{data.key}/conditions/q/#{data.zipcode}.json"
+    "http://api.wunderground.com/api/#{data.key}/conditions/q/#{data.location}.json"

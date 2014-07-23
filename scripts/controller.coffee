@@ -3,8 +3,8 @@ namespace('Weather')
 class Weather.Controller
   @widgets: []
 
-  @setupWidgetIn: (container, apiKey) ->
-    widget = new Weather.Widget.Controller(container, apiKey)
+  @setupWidgetIn: (container, apiKey, defaultValue) ->
+    widget = new Weather.Widgets.Controller(container, apiKey, defaultValue)
     widget.initialize()
     @addToWidgetsContainer(widget)
 
@@ -21,8 +21,11 @@ class Weather.Controller
     @allWidgetsExecute("showForm")
 
   @allWidgetsExecute: (command) ->
-    _.each(@widgets, (widget) ->
-      widget[command]()
+    _.each(@widgets, (widget) =>
+      if widget.isActive()
+        widget[command]()
+      else
+        @removeFromWidgetsContainer(widget)
     )
 
   @closeWidgetInContainer: (container) ->
@@ -30,7 +33,7 @@ class Weather.Controller
       widget.container == container
     )[0]
     if widget
-      @removeWidgetContent(widget)
+      @closeWidget(widget)
       @removeFromWidgetsContainer(widget)
 
   @removeFromWidgetsContainer: (widgetToRemove) ->
@@ -38,5 +41,5 @@ class Weather.Controller
       return widget == widgetToRemove
     )
 
-  @removeWidgetContent: (widget) ->
-    widget.removeContent()
+  @closeWidget: (widget) ->
+    widget.closeWidget()

@@ -1,18 +1,18 @@
 namespace("Weather.Widget")
 
-class Weather.Widget.Display
+class Weather.Widgets.Display
   constructor: (container) ->
     @container = container
 
   setupWidget: ->
-    widgetHtml = Weather.Templates.renderForm()
+    widgetHtml = Weather.Widgets.Templates.renderForm()
     $(@container).append(widgetHtml)
 
   getInput: ->
     $("#{@container} [name=weather-search]").val()
 
   showCurrentWeather: (weatherObj) ->
-    weatherHtml = Weather.Templates.renderCurrentConditions(weatherObj)
+    weatherHtml = Weather.Widgets.Templates.renderCurrentConditions(weatherObj)
     $("#{@container} [data-id=weather-output]").html(weatherHtml)
 
   hideForm: ->
@@ -22,4 +22,4 @@ class Weather.Widget.Display
     $("#{@container} [data-id=weather-form]").show()
 
   removeWidget: ->
-    $("#{@container} [data-id=weather-widget-wrapper]").remove()
+    $(@container).remove()

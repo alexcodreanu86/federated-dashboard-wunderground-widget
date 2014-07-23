@@ -15,7 +15,7 @@ setupTwoContainers = ->
   """
 
 newDisplay = (container) ->
-  new Weather.Widget.Display(container)
+  new Weather.Widgets.Display(container)
 
 container1 = "[data-id=widget-container-1]"
 container2 = "[data-id=widget-container-2]"
