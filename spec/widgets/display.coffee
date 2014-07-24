@@ -52,20 +52,35 @@ describe "Weather.Widget.Display", ->
     expect($("#{container1} [data-id=weather-output]")).toContainText('Niles')
     expect($("#{container2} [data-id=weather-output]")).not.toContainText('Niles')
 
-  it "hideForm is hiding the form", ->
+  it "exitEditMode is hiding the form", ->
     setupOneContainer()
     display = newDisplay(container1)
     display.setupWidget()
-    display.hideForm()
+    display.exitEditMode()
     expect($("#{container1} [data-id=weather-form]").attr('style')).toEqual('display: none;')
 
-  it "showForm is showing the form", ->
+  it "exitEditMode is hiding the close-widget x", ->
     setupOneContainer()
     display = newDisplay(container1)
     display.setupWidget()
-    display.hideForm()
-    display.showForm()
+    display.exitEditMode()
+    expect($("#{container1} [data-id=weather-close]").attr('style')).toEqual('display: none;')
+
+  it "enterEditMode is showing the form", ->
+    setupOneContainer()
+    display = newDisplay(container1)
+    display.setupWidget()
+    display.exitEditMode()
+    display.enterEditMode()
     expect($("#{container1} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
+
+  it "enterEditMode is showing the close-widget x", ->
+    setupOneContainer()
+    display = newDisplay(container1)
+    display.setupWidget()
+    display.exitEditMode()
+    display.enterEditMode()
+    expect($("#{container1} [data-id=weather-close]").attr('style')).not.toEqual('display: none;')
 
   it "removeWidget is removing the widget's content", ->
     setupOneContainer()

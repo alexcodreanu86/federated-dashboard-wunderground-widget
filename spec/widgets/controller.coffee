@@ -48,7 +48,7 @@ describe "Weather.Widgets.Controller", ->
     controller.initialize()
     expect(controller.isActive()).toBe(true)
 
-  it "displayDefault is loading data data when there is a default value", ->
+  it "displayDefault is loading data when there is a default value", ->
     controller = newController(container, defaultValue)
     spy = spyOn(Weather.Widgets.API, 'getCurrentConditions')
     controller.displayDefault()

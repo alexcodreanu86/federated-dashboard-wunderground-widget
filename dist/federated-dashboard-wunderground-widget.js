@@ -263,11 +263,11 @@
     };
 
     Controller.prototype.hideForm = function() {
-      return this.display.hideForm();
+      return this.display.exitEditMode();
     };
 
     Controller.prototype.showForm = function() {
-      return this.display.showForm();
+      return this.display.enterEditMode();
     };
 
     Controller.prototype.getContainer = function() {
@@ -304,12 +304,30 @@
       return $("" + this.container + " [data-id=weather-output]").html(weatherHtml);
     };
 
+    Display.prototype.exitEditMode = function() {
+      this.hideForm();
+      return this.hideCloseWidget();
+    };
+
     Display.prototype.hideForm = function() {
       return $("" + this.container + " [data-id=weather-form]").hide();
     };
 
+    Display.prototype.hideCloseWidget = function() {
+      return $("" + this.container + " [data-id=weather-close]").hide();
+    };
+
+    Display.prototype.enterEditMode = function() {
+      this.showForm();
+      return this.showCloseWidget();
+    };
+
     Display.prototype.showForm = function() {
       return $("" + this.container + " [data-id=weather-form]").show();
+    };
+
+    Display.prototype.showCloseWidget = function() {
+      return $("" + this.container + " [data-id=weather-close]").show();
     };
 
     Display.prototype.removeWidget = function() {
