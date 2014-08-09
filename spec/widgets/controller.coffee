@@ -2,12 +2,6 @@ container     = "[data-id=widget-container-1]"
 key           = "1243"
 defaultValue  = "60714"
 requestData   = {key: key, location: defaultValue}
-weatherObj    = {  current_observation: {
-                    display_location: {
-                      full: "Niles IL"
-                    }, weather: "Partly Cloudy", temp_f: "77.9", icon_url: "http://icons.wxug.com/i/c/k/partlycloudy.gif"
-                  }
-                }
 
 setupOneContainer = ->
   setFixtures "<div data-id='widget-container-1'></div>"
