@@ -7,7 +7,7 @@ setupOneContainer = ->
   setFixtures "<div data-id='widget-container-1'></div>"
 
 newController = (container, value) ->
-  new Weather.Widgets.Controller(container, key , value)
+  new Weather.Widgets.Controller({container: container,key: key ,defaultValue: value})
 
 describe "Weather.Widgets.Controller", ->
   it "stores the container that it is initialized with", ->

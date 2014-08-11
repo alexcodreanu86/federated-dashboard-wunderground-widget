@@ -3,8 +3,8 @@ namespace('Weather')
 class Weather.Controller
   @widgets: []
 
-  @setupWidgetIn: (container, apiKey, defaultValue) ->
-    widget = new Weather.Widgets.Controller(container, apiKey, defaultValue)
+  @setupWidgetIn: (settings) ->
+    widget = new Weather.Widgets.Controller(settings)
     widget.initialize()
     @addToWidgetsContainer(widget)
 
