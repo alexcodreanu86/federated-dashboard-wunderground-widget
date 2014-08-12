@@ -6,6 +6,7 @@ class Weather.Widgets.Controller
     apiKey = settings.key
     @container = settings.container
     @display = new Weather.Widgets.Display(@container, settings.animationSpeed)
+    @refresh = settings.refresh
     @activeStatus = false
     @defaultValue = settings.defaultValue
 
@@ -39,6 +40,16 @@ class Weather.Widgets.Controller
   displayCurrentConditions: (input) ->
     requestData = {key: apiKey, location: input}
     Weather.Widgets.API.getCurrentConditions(requestData, @display)
+    if @refresh
+      @processRefresh(input)
+
+  processRefresh: (input) ->
+    time = new Date()
+    secondsLeft = 60 - time.getSeconds()
+    setTimeout( =>
+      if @isActive()
+        @displayCurrentConditions(input)
+    , secondsLeft * 1000)
 
   closeWidget: ->
     @unbind()

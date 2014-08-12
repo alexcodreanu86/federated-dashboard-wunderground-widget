@@ -18,8 +18,12 @@ class Weather.Widgets.Templates
 
   @renderCurrentConditions: (weatherObj) ->
     _.template( """
-                  <p><%= display_location.full %> <%= temp_f %>&deg; F</p>
-                  <p><%= weather %></p>
-                  <p><img src='<%= icon_url %>'></p>
+                  <p class="weather-location"><%= location %> </p>
+                  <p class="weather-local-time">
+                    <span class="weather-time"><%= localTime %></span>
+                    <span class="weather-am-pm"><%= amOrPm %></span></p>
+                  <img class="weather-description-icon" src='<%= iconUrl %>'>
+                  <p class="weather-description-text"><%= weatherDescription %></p>
+                  <p class="weather-temperature"><%= temperature %></p>
                 """, weatherObj)
 

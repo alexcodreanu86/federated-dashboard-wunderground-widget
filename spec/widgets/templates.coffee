@@ -1,12 +1,19 @@
-weatherObj = {  current_observation: {
-                  display_location: {
-                    full: "Niles IL"
-                  }, weather: "Partly Cloudy", temp_f: "77.9", icon_url: "http://icons.wxug.com/i/c/k/partlycloudy.gif"
-                }
-              }
+weatherObj = {
+                location: "Niles IL",
+                weatherDescription: "Partly Cloudy",
+                temperature: "77.9&deg;",
+                iconUrl: "http://icons.wxug.com/i/c/k/partlycloudy.gif"
+                localTime: "7:50"
+                amOrPm: "PM"
+             }
 
 describe "Weather.Templates.Templates", ->
   it "renderCurrentConditions generates proper html string", ->
-    str = Weather.Widgets.Templates.renderCurrentConditions(weatherObj.current_observation)
-    expect(str).toContainElement('img')
-    expect(str).toContainText('Niles')
+    generatedHtml = Weather.Widgets.Templates.renderCurrentConditions(weatherObj)
+    setFixtures sandbox()
+    $('#sandbox').append(generatedHtml)
+    expect($('#sandbox')).toContainElement('img')
+    expect($('#sandbox')).toContainText('Niles')
+    expect($('#sandbox')).toContainText('Partly Cloudy')
+    expect($('#sandbox')).toContainText('7:50')
+    expect($('#sandbox')).toContainText('PM')

@@ -10,6 +10,10 @@ newController = (container, value) ->
   new Weather.Widgets.Controller({container: container,key: key ,defaultValue: value})
 
 describe "Weather.Widgets.Controller", ->
+  controller = undefined
+  afterEach ->
+    controller.closeWidget()
+
   it "stores the container that it is initialized with", ->
     controller = newController(container)
     expect(controller.getContainer()).toEqual(container)
@@ -121,3 +125,48 @@ describe "Weather.Widgets.Controller", ->
     controller.initialize()
     controller.removeContent()
     expect($(container)).not.toContainElement("[data-id=weather-widget-wrapper]")
+
+  describe "displayCurrentConditions", ->
+    controller = undefined
+    oneMinute = 60000
+    spy = undefined
+
+    nextRefresh = ->
+      (60 - new Date().getSeconds()) * 1000
+
+    setSpy = ->
+      spyOn(Weather.Widgets.API, 'getCurrentConditions')
+
+    beforeEach ->
+      jasmine.clock().install()
+      spy = setSpy()
+
+    afterEach ->
+      controller.closeWidget()
+      jasmine.clock().uninstall()
+
+    it "will refresh once per minute if widget is active", ->
+      controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
+      controller.initialize()
+      controller.displayCurrentConditions('Niles IL')
+      expect(spy.calls.count()).toBe(1)
+      nextRefresh = nextRefresh()
+      jasmine.clock().tick(nextRefresh + 100)
+      expect(spy.calls.count()).toBe(2)
+
+    it "will not refresh if widget is closed", ->
+      controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
+      controller.initialize()
+      controller.displayCurrentConditions('Niles IL')
+      controller.closeWidget()
+      expect(spy.calls.count()).toBe(1)
+      jasmine.clock().tick(oneMinute)
+      expect(spy.calls.count()).toBe(1)
+
+    it "displayCurrentConditions will execute only once if widget refresh is not true", ->
+      controller = newController(container)
+      controller.initialize()
+      controller.displayCurrentConditions('Niles IL')
+      expect(spy.calls.count()).toBe(1)
+      jasmine.clock().tick(oneMinute)
+      expect(spy.calls.count()).toBe(1)

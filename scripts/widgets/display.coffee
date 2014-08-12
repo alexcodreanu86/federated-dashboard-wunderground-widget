@@ -13,7 +13,8 @@ class Weather.Widgets.Display
     $("#{@container} [name=weather-search]").val()
 
   showCurrentWeather: (weatherObj) ->
-    weatherHtml = Weather.Widgets.Templates.renderCurrentConditions(weatherObj)
+    formatedResponse = Weather.Widgets.ResponseFormater.process(weatherObj)
+    weatherHtml = Weather.Widgets.Templates.renderCurrentConditions(formatedResponse)
     $("#{@container} [data-id=weather-output]").html(weatherHtml)
 
   exitEditMode: ->

@@ -183,6 +183,7 @@
       apiKey = settings.key;
       this.container = settings.container;
       this.display = new Weather.Widgets.Display(this.container, settings.animationSpeed);
+      this.refresh = settings.refresh;
       this.activeStatus = false;
       this.defaultValue = settings.defaultValue;
     }
@@ -237,7 +238,23 @@
         key: apiKey,
         location: input
       };
-      return Weather.Widgets.API.getCurrentConditions(requestData, this.display);
+      Weather.Widgets.API.getCurrentConditions(requestData, this.display);
+      if (this.refresh) {
+        return this.processRefresh(input);
+      }
+    };
+
+    Controller.prototype.processRefresh = function(input) {
+      var secondsLeft, time;
+      time = new Date();
+      secondsLeft = 60 - time.getSeconds();
+      return setTimeout((function(_this) {
+        return function() {
+          if (_this.isActive()) {
+            return _this.displayCurrentConditions(input);
+          }
+        };
+      })(this), secondsLeft * 1000);
     };
 
     Controller.prototype.closeWidget = function() {
@@ -293,8 +310,9 @@
     };
 
     Display.prototype.showCurrentWeather = function(weatherObj) {
-      var weatherHtml;
-      weatherHtml = Weather.Widgets.Templates.renderCurrentConditions(weatherObj);
+      var formatedResponse, weatherHtml;
+      formatedResponse = Weather.Widgets.ResponseFormater.process(weatherObj);
+      weatherHtml = Weather.Widgets.Templates.renderCurrentConditions(formatedResponse);
       return $("" + this.container + " [data-id=weather-output]").html(weatherHtml);
     };
 
@@ -335,6 +353,31 @@
 }).call(this);
 
 (function() {
+  namespace('Weather.Widgets');
+
+  Weather.Widgets.ResponseFormater = (function() {
+    function ResponseFormater() {}
+
+    ResponseFormater.process = function(weatherObj) {
+      var formatedResponse, formatedTime;
+      formatedTime = Weather.Widgets.TimeFormater.process(weatherObj.local_time_rfc822);
+      formatedResponse = {};
+      formatedResponse.location = weatherObj.display_location.full;
+      formatedResponse.weatherDescription = weatherObj.weather;
+      formatedResponse.temperature = "" + weatherObj.temp_f + "&deg;";
+      formatedResponse.iconUrl = weatherObj.icon_url;
+      formatedResponse.localTime = formatedTime.time;
+      formatedResponse.amOrPm = formatedTime.amOrPm;
+      return formatedResponse;
+    };
+
+    return ResponseFormater;
+
+  })();
+
+}).call(this);
+
+(function() {
   namespace("Weather.Widgets");
 
   Weather.Widgets.Templates = (function() {
@@ -345,10 +388,43 @@
     };
 
     Templates.renderCurrentConditions = function(weatherObj) {
-      return _.template("<p><%= display_location.full %> <%= temp_f %>&deg; F</p>\n<p><%= weather %></p>\n<p><img src='<%= icon_url %>'></p>", weatherObj);
+      return _.template("<p class=\"weather-location\"><%= location %> </p>\n<p class=\"weather-local-time\">\n  <span class=\"weather-time\"><%= localTime %></span>\n  <span class=\"weather-am-pm\"><%= amOrPm %></span></p>\n<img class=\"weather-description-icon\" src='<%= iconUrl %>'>\n<p class=\"weather-description-text\"><%= weatherDescription %></p>\n<p class=\"weather-temperature\"><%= temperature %></p>", weatherObj);
     };
 
     return Templates;
+
+  })();
+
+}).call(this);
+
+(function() {
+  namespace('Weather.Widgets');
+
+  Weather.Widgets.TimeFormater = (function() {
+    function TimeFormater() {}
+
+    TimeFormater.process = function(timeString) {
+      var amOrPm, hours, minutes, timeObj;
+      timeObj = new Date(timeString);
+      minutes = timeObj.getMinutes();
+      hours = timeObj.getHours();
+      if (this.isBeforeNoon(hours)) {
+        amOrPm = "AM";
+      } else {
+        amOrPm = "PM";
+        hours -= 12;
+      }
+      return {
+        time: "" + hours + ":" + minutes,
+        amOrPm: amOrPm
+      };
+    };
+
+    TimeFormater.isBeforeNoon = function(hours) {
+      return hours < 12;
+    };
+
+    return TimeFormater;
 
   })();
 
