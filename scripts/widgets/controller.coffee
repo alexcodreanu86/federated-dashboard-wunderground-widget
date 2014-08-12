@@ -5,7 +5,7 @@ class Weather.Widgets.Controller
   constructor: (settings) ->
     apiKey = settings.key
     @container = settings.container
-    @display = new Weather.Widgets.Display(@container)
+    @display = new Weather.Widgets.Display(@container, settings.animationSpeed)
     @activeStatus = false
     @defaultValue = settings.defaultValue
 

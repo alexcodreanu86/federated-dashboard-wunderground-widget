@@ -182,7 +182,7 @@
     function Controller(settings) {
       apiKey = settings.key;
       this.container = settings.container;
-      this.display = new Weather.Widgets.Display(this.container);
+      this.display = new Weather.Widgets.Display(this.container, settings.animationSpeed);
       this.activeStatus = false;
       this.defaultValue = settings.defaultValue;
     }
@@ -277,7 +277,7 @@
   namespace("Weather.Widget");
 
   Weather.Widgets.Display = (function() {
-    function Display(container) {
+    function Display(container, animationSpeed) {
       this.container = container;
     }
 
@@ -303,11 +303,11 @@
     };
 
     Display.prototype.hideForm = function() {
-      return $("" + this.container + " [data-id=weather-form]").hide();
+      return $("" + this.container + " [data-id=weather-form]").hide(this.animationSpeed);
     };
 
     Display.prototype.hideCloseWidget = function() {
-      return $("" + this.container + " [data-id=weather-close]").hide();
+      return $("" + this.container + " [data-id=weather-close]").hide(this.animationSpeed);
     };
 
     Display.prototype.enterEditMode = function() {
@@ -316,11 +316,11 @@
     };
 
     Display.prototype.showForm = function() {
-      return $("" + this.container + " [data-id=weather-form]").show();
+      return $("" + this.container + " [data-id=weather-form]").show(this.animationSpeed);
     };
 
     Display.prototype.showCloseWidget = function() {
-      return $("" + this.container + " [data-id=weather-close]").show();
+      return $("" + this.container + " [data-id=weather-close]").show(this.animationSpeed);
     };
 
     Display.prototype.removeWidget = function() {

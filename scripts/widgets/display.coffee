@@ -1,7 +1,7 @@
 namespace("Weather.Widget")
 
 class Weather.Widgets.Display
-  constructor: (container) ->
+  constructor: (container, animationSpeed) ->
     @container = container
 
   setupWidget: ->
@@ -20,20 +20,20 @@ class Weather.Widgets.Display
     @hideCloseWidget()
 
   hideForm: ->
-    $("#{@container} [data-id=weather-form]").hide()
+    $("#{@container} [data-id=weather-form]").hide(@animationSpeed)
 
   hideCloseWidget: ->
-    $("#{@container} [data-id=weather-close]").hide()
+    $("#{@container} [data-id=weather-close]").hide(@animationSpeed)
 
   enterEditMode: ->
     @showForm()
     @showCloseWidget()
 
   showForm: ->
-    $("#{@container} [data-id=weather-form]").show()
+    $("#{@container} [data-id=weather-form]").show(@animationSpeed)
 
   showCloseWidget: ->
-    $("#{@container} [data-id=weather-close]").show()
+    $("#{@container} [data-id=weather-close]").show(@animationSpeed)
 
   removeWidget: ->
     $(@container).remove()
