@@ -279,6 +279,7 @@
   Weather.Widgets.Display = (function() {
     function Display(container, animationSpeed) {
       this.container = container;
+      this.animationSpeed = animationSpeed;
     }
 
     Display.prototype.setupWidget = function() {

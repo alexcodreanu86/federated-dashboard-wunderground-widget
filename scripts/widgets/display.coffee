@@ -3,6 +3,7 @@ namespace("Weather.Widget")
 class Weather.Widgets.Display
   constructor: (container, animationSpeed) ->
     @container = container
+    @animationSpeed = animationSpeed
 
   setupWidget: ->
     widgetHtml = Weather.Widgets.Templates.renderForm()
