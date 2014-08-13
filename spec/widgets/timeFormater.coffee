@@ -17,3 +17,8 @@ describe "Weather.Widgets.TimeFormater", ->
     expect(formatedDate.time).toEqual("5:05")
     expect(formatedDate.amOrPm).toEqual("PM")
 
+  it "returns proper time for noon time", ->
+    pmDate = "Tue, 12 Aug 2014 12:05:23 +0100"
+    formatedDate = Weather.Widgets.TimeFormater.process(pmDate)
+    expect(formatedDate.time).toEqual("12:05")
+    expect(formatedDate.amOrPm).toEqual("PM")

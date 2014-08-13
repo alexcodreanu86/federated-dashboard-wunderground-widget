@@ -41,15 +41,22 @@ class Weather.Widgets.Controller
     requestData = {key: apiKey, location: input}
     Weather.Widgets.API.getCurrentConditions(requestData, @display)
     if @refresh
+      @clearActiveTimeout()
       @processRefresh(input)
 
+  clearActiveTimeout: ->
+    if @timeout
+      clearTimeout(@timeout)
+
   processRefresh: (input) ->
-    time = new Date()
-    secondsLeft = 60 - time.getSeconds()
-    setTimeout( =>
+    @timeout = setTimeout( =>
       if @isActive()
         @displayCurrentConditions(input)
-    , secondsLeft * 1000)
+    , @nextRefresh())
+
+  nextRefresh: ->
+    time = new Date()
+    (60 - time.getSeconds()) * 1000
 
   closeWidget: ->
     @unbind()

@@ -163,10 +163,20 @@ describe "Weather.Widgets.Controller", ->
       jasmine.clock().tick(oneMinute)
       expect(spy.calls.count()).toBe(1)
 
-    it "displayCurrentConditions will execute only once if widget refresh is not true", ->
+    it "will execute only once if widget refresh is not true", ->
       controller = newController(container)
       controller.initialize()
       controller.displayCurrentConditions('Niles IL')
       expect(spy.calls.count()).toBe(1)
       jasmine.clock().tick(oneMinute)
       expect(spy.calls.count()).toBe(1)
+
+    it "will refresh only with the new search when a new one is submitted", ->
+      controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
+      controller.initialize()
+      controller.displayCurrentConditions('Niles IL')
+      expect(spy).toHaveBeenCalledWith({key: key, location: 'Niles IL'}, controller.display)
+      controller.displayCurrentConditions('London UK')
+      nextRefresh = (60 - new Date().getSeconds()) * 1000
+      jasmine.clock().tick(nextRefresh + 100)
+      expect(spy.calls.count()).toBe(3)

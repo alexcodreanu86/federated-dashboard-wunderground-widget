@@ -2,18 +2,16 @@ namespace('Weather.Widgets')
 
 class Weather.Widgets.TimeFormater
   @process: (dateString) ->
-    dateObj = new Date(dateString)
+    dateObj = @getDateObjWithNoTimezone(dateString)
+    hours = @getHours(dateObj)
     minutes = @getMinutes(dateObj)
-    hours = dateObj.getHours()
-    if @isBeforeNoon(hours)
-      amOrPm = "AM"
-    else
-      amOrPm = "PM"
-      hours -= 12
+    amOrPm = @getAmPm(dateObj)
     {time: "#{hours}:#{minutes}", amOrPm: amOrPm}
 
-  @isBeforeNoon: (hours) ->
-    hours < 12
+  @getDateObjWithNoTimezone: (dateString) ->
+    date = dateString.substring(0, dateString.length - 6)
+    new Date(date)
+
 
   @getMinutes: (dateObj) ->
     minutes = dateObj.getMinutes()
@@ -21,3 +19,20 @@ class Weather.Widgets.TimeFormater
       "0" + minutes
     else
       minutes
+
+  @getHours: (dateObj) ->
+    hours = dateObj.getHours()
+    if hours > 12
+      hours - 12
+    else
+      hours
+
+  @getAmPm: (dateObj) ->
+    hours = dateObj.getHours()
+    if @isBeforeNoon(hours)
+      "AM"
+    else
+      "PM"
+
+  @isBeforeNoon: (hours) ->
+    hours < 12

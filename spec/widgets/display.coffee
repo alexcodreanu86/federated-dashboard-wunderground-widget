@@ -1,8 +1,8 @@
-weatherObj = {  current_observation: {
-                  display_location: {
-                    full: "Niles IL"
-                  }, weather: "Partly Cloudy", temp_f: "77.9", icon_url: "http://icons.wxug.com/i/c/k/partlycloudy.gif"
-                }
+weatherObj = {
+                display_location: {
+                  full: "Niles IL"
+                }, weather: "Partly Cloudy", temp_f: "77.9", icon_url: "http://icons.wxug.com/i/c/k/partlycloudy.gif"
+                local_time_rfc822: "Tue, 12 Aug 2014 19:50:23 -0500"
               }
 
 setupOneContainer = ->
@@ -48,7 +48,7 @@ describe "Weather.Widget.Display", ->
     display2 = newDisplay(container2)
     display.setupWidget()
     display2.setupWidget()
-    display.showCurrentWeather(weatherObj.current_observation)
+    display.showCurrentWeather(weatherObj)
     expect($("#{container1} [data-id=weather-output]")).toContainText('Niles')
     expect($("#{container2} [data-id=weather-output]")).not.toContainText('Niles')
 

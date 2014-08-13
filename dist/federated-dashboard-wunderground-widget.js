@@ -240,21 +240,31 @@
       };
       Weather.Widgets.API.getCurrentConditions(requestData, this.display);
       if (this.refresh) {
+        this.clearActiveTimeout();
         return this.processRefresh(input);
       }
     };
 
+    Controller.prototype.clearActiveTimeout = function() {
+      if (this.timeout) {
+        return clearTimeout(this.timeout);
+      }
+    };
+
     Controller.prototype.processRefresh = function(input) {
-      var secondsLeft, time;
-      time = new Date();
-      secondsLeft = 60 - time.getSeconds();
-      return setTimeout((function(_this) {
+      return this.timeout = setTimeout((function(_this) {
         return function() {
           if (_this.isActive()) {
             return _this.displayCurrentConditions(input);
           }
         };
-      })(this), secondsLeft * 1000);
+      })(this), this.nextRefresh());
+    };
+
+    Controller.prototype.nextRefresh = function() {
+      var time;
+      time = new Date();
+      return (60 - time.getSeconds()) * 1000;
     };
 
     Controller.prototype.closeWidget = function() {
@@ -405,23 +415,20 @@
 
     TimeFormater.process = function(dateString) {
       var amOrPm, dateObj, hours, minutes;
-      dateObj = new Date(dateString);
+      dateObj = this.getDateObjWithNoTimezone(dateString);
+      hours = this.getHours(dateObj);
       minutes = this.getMinutes(dateObj);
-      hours = dateObj.getHours();
-      if (this.isBeforeNoon(hours)) {
-        amOrPm = "AM";
-      } else {
-        amOrPm = "PM";
-        hours -= 12;
-      }
+      amOrPm = this.getAmPm(dateObj);
       return {
         time: "" + hours + ":" + minutes,
         amOrPm: amOrPm
       };
     };
 
-    TimeFormater.isBeforeNoon = function(hours) {
-      return hours < 12;
+    TimeFormater.getDateObjWithNoTimezone = function(dateString) {
+      var date;
+      date = dateString.substring(0, dateString.length - 6);
+      return new Date(date);
     };
 
     TimeFormater.getMinutes = function(dateObj) {
@@ -432,6 +439,30 @@
       } else {
         return minutes;
       }
+    };
+
+    TimeFormater.getHours = function(dateObj) {
+      var hours;
+      hours = dateObj.getHours();
+      if (hours > 12) {
+        return hours - 12;
+      } else {
+        return hours;
+      }
+    };
+
+    TimeFormater.getAmPm = function(dateObj) {
+      var hours;
+      hours = dateObj.getHours();
+      if (this.isBeforeNoon(hours)) {
+        return "AM";
+      } else {
+        return "PM";
+      }
+    };
+
+    TimeFormater.isBeforeNoon = function(hours) {
+      return hours < 12;
     };
 
     return TimeFormater;
