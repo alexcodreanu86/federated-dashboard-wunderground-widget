@@ -10,3 +10,10 @@ describe "Weather.Widgets.TimeFormater", ->
     formatedDate = Weather.Widgets.TimeFormater.process(pmDate)
     expect(formatedDate.time).toEqual("5:50")
     expect(formatedDate.amOrPm).toEqual("PM")
+
+  it "returns proper time for a date with minutes less than 10", ->
+    pmDate = "Tue, 12 Aug 2014 17:05:23 -0500"
+    formatedDate = Weather.Widgets.TimeFormater.process(pmDate)
+    expect(formatedDate.time).toEqual("5:05")
+    expect(formatedDate.amOrPm).toEqual("PM")
+

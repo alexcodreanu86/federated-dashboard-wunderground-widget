@@ -403,11 +403,11 @@
   Weather.Widgets.TimeFormater = (function() {
     function TimeFormater() {}
 
-    TimeFormater.process = function(timeString) {
-      var amOrPm, hours, minutes, timeObj;
-      timeObj = new Date(timeString);
-      minutes = timeObj.getMinutes();
-      hours = timeObj.getHours();
+    TimeFormater.process = function(dateString) {
+      var amOrPm, dateObj, hours, minutes;
+      dateObj = new Date(dateString);
+      minutes = this.getMinutes(dateObj);
+      hours = dateObj.getHours();
       if (this.isBeforeNoon(hours)) {
         amOrPm = "AM";
       } else {
@@ -422,6 +422,16 @@
 
     TimeFormater.isBeforeNoon = function(hours) {
       return hours < 12;
+    };
+
+    TimeFormater.getMinutes = function(dateObj) {
+      var minutes;
+      minutes = dateObj.getMinutes();
+      if (minutes < 10) {
+        return "0" + minutes;
+      } else {
+        return minutes;
+      }
     };
 
     return TimeFormater;

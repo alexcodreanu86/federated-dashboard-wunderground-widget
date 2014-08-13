@@ -1,10 +1,10 @@
 namespace('Weather.Widgets')
 
 class Weather.Widgets.TimeFormater
-  @process: (timeString) ->
-    timeObj = new Date(timeString)
-    minutes = timeObj.getMinutes()
-    hours = timeObj.getHours()
+  @process: (dateString) ->
+    dateObj = new Date(dateString)
+    minutes = @getMinutes(dateObj)
+    hours = dateObj.getHours()
     if @isBeforeNoon(hours)
       amOrPm = "AM"
     else
@@ -14,3 +14,10 @@ class Weather.Widgets.TimeFormater
 
   @isBeforeNoon: (hours) ->
     hours < 12
+
+  @getMinutes: (dateObj) ->
+    minutes = dateObj.getMinutes()
+    if minutes < 10
+      "0" + minutes
+    else
+      minutes
