@@ -3,3 +3,6 @@ bower_components
 key.txt
 index.html
 .tmp
+stylesheet
+fonts
+.sass-cache

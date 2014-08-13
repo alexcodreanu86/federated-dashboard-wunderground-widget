@@ -14,6 +14,5 @@ describe "Weather.Templates.Templates", ->
     $('#sandbox').append(generatedHtml)
     expect($('#sandbox')).toContainElement('img')
     expect($('#sandbox')).toContainText('Niles')
-    expect($('#sandbox')).toContainText('Partly Cloudy')
     expect($('#sandbox')).toContainText('7:50')
     expect($('#sandbox')).toContainText('PM')

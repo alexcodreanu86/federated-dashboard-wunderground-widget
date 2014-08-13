@@ -398,7 +398,7 @@
     };
 
     Templates.renderCurrentConditions = function(weatherObj) {
-      return _.template("<p class=\"weather-location\"><%= location %> </p>\n<p class=\"weather-local-time\">\n  <span class=\"weather-time\"><%= localTime %></span>\n  <span class=\"weather-am-pm\"><%= amOrPm %></span></p>\n<img class=\"weather-description-icon\" src='<%= iconUrl %>'>\n<p class=\"weather-description-text\"><%= weatherDescription %></p>\n<p class=\"weather-temperature\"><%= temperature %></p>", weatherObj);
+      return _.template("<div class=\"weather-location-container\">\n  <p class=\"weather-location\"><%= location %> </p>\n  <p class=\"weather-local-time\">\n    <span class=\"weather-time\"><%= localTime %></span>\n    <span class=\"weather-am-pm\"><%= amOrPm %></span>\n  </p>\n</div>\n<div class=\"weather-information-container\">\n  <img class=\"weather-description-icon\" src='<%= iconUrl %>'>\n  <p class=\"weather-temperature\"><%= temperature %></p>\n</div>", weatherObj);
     };
 
     return Templates;
