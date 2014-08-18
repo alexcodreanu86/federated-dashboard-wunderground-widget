@@ -2,6 +2,12 @@ container     = "[data-id=widget-container-1]"
 key           = "1243"
 defaultValue  = "60714"
 requestData   = {key: key, location: defaultValue}
+weatherObj    = {
+                display_location: {
+                  full: "Niles IL"
+                }, weather: "Partly Cloudy", temp_f: "77.9", icon_url: "http://icons.wxug.com/i/c/k/partlycloudy.gif"
+                local_time_rfc822: "Tue, 12 Aug 2014 19:58:23 -0500"
+              }
 
 setupOneContainer = ->
   setFixtures "<div data-id='widget-container-1'></div>"
@@ -134,8 +140,14 @@ describe "Weather.Widgets.Controller", ->
     nextRefresh = ->
       (60 - new Date().getSeconds()) * 1000
 
+    displayMockResponse = ->
+      controller.display.showCurrentWeather(weatherObj)
+
+
     setSpy = ->
-      spyOn(Weather.Widgets.API, 'getCurrentConditions')
+      spyOn(Weather.Widgets.API, 'getCurrentConditions').and.callFake(
+        displayMockResponse
+      )
 
     beforeEach ->
       jasmine.clock().install()
@@ -144,15 +156,6 @@ describe "Weather.Widgets.Controller", ->
     afterEach ->
       controller.closeWidget()
       jasmine.clock().uninstall()
-
-    it "will refresh once per minute if widget is active", ->
-      controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
-      controller.initialize()
-      controller.displayCurrentConditions('Niles IL')
-      expect(spy.calls.count()).toBe(1)
-      nextRefresh = nextRefresh()
-      jasmine.clock().tick(nextRefresh + 100)
-      expect(spy.calls.count()).toBe(2)
 
     it "will not refresh if widget is closed", ->
       controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
@@ -178,5 +181,14 @@ describe "Weather.Widgets.Controller", ->
       expect(spy).toHaveBeenCalledWith({key: key, location: 'Niles IL'}, controller.display)
       controller.displayCurrentConditions('London UK')
       nextRefresh = (60 - new Date().getSeconds()) * 1000
+      jasmine.clock().tick(10 * oneMinute + 100)
+
+    it "refresh will get new information every 10 minutes", ->
+      setupOneContainer()
+      controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
+      controller.initialize()
+      controller.displayCurrentConditions('Niles IL')
+      nextRefresh = (60 - new Date().getSeconds()) * 1000
       jasmine.clock().tick(nextRefresh + 100)
-      expect(spy.calls.count()).toBe(3)
+      expect(spy.calls.count()).toEqual(1)
+      jasmine.clock().tick(oneMinute + 100)

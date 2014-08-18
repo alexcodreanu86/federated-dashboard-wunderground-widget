@@ -39,3 +39,19 @@ class Weather.Widgets.Display
 
   removeWidget: ->
     $(@container).remove()
+
+  getDisplayedTime: ->
+    $("#{@container} [data-id=weather-time]").text()
+
+  incrementTime: ->
+    currentTime = @getDisplayedTime()
+    minutesDigit = @getLastChar(currentTime)
+    incrementedDigit = parseInt(minutesDigit) + 1
+    incrementedTime = currentTime.replace(/\d$/, incrementedDigit)
+    @setTime(incrementedTime)
+
+  getLastChar: (str) ->
+    str[str.length - 1]
+
+  setTime: (time) ->
+    $("#{@container} [data-id=weather-time]").text(time)

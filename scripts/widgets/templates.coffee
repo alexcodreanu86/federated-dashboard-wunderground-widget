@@ -21,7 +21,7 @@ class Weather.Widgets.Templates
                   <div class="weather-location-container">
                     <p class="weather-location"><%= location %> </p>
                     <p class="weather-local-time">
-                      <span class="weather-time"><%= localTime %></span>
+                      <span class="weather-time" data-id="weather-time"><%= localTime %></span>
                       <span class="weather-am-pm"><%= amOrPm %></span>
                     </p>
                   </div>

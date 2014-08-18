@@ -88,3 +88,19 @@ describe "Weather.Widget.Display", ->
     display.setupWidget()
     display.removeWidget()
     expect($(container1)).not.toContainElement("[data-id=weather-widget-wrapper]")
+
+  it "getDisplayedTime returns the current time on the screen", ->
+    setupOneContainer()
+    display = newDisplay(container1)
+    display.setupWidget()
+    display.showCurrentWeather(weatherObj)
+    expect(display.getDisplayedTime()).toEqual('7:50')
+
+  it "incrementTime is incrementing the current time displayed", ->
+    setupOneContainer()
+    display = newDisplay(container1)
+    display.setupWidget()
+    display.showCurrentWeather(weatherObj)
+    expect(display.getDisplayedTime()).toEqual('7:50')
+    display.incrementTime()
+    expect(display.getDisplayedTime()).toEqual('7:51')

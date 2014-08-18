@@ -34,15 +34,18 @@ class Weather.Widgets.Controller
     $("#{@container} [data-id=weather-close]").click(=> @closeWidget())
 
   processClickedButton: ->
-    input = @display.getInput()
-    @displayCurrentConditions(input)
+    @input = @display.getInput()
+    @displayCurrentConditions(@input)
 
   displayCurrentConditions: (input) ->
     requestData = {key: apiKey, location: input}
     Weather.Widgets.API.getCurrentConditions(requestData, @display)
     if @refresh
-      @clearActiveTimeout()
-      @processRefresh(input)
+      @initializeRefresh(input)
+
+  initializeRefresh: (input) ->
+    @clearActiveTimeout()
+    @processRefresh(input)
 
   clearActiveTimeout: ->
     if @timeout
@@ -51,8 +54,20 @@ class Weather.Widgets.Controller
   processRefresh: (input) ->
     @timeout = setTimeout( =>
       if @isActive()
-        @displayCurrentConditions(input)
+        @refreshCurrentConditions(input)
     , @nextRefresh())
+
+  refreshCurrentConditions: (input) ->
+    displayedTime = @display.getDisplayedTime()
+    if @isTimeToRefresh(displayedTime)
+      @displayCurrentConditions(input)
+    else
+      @initializeRefresh(input)
+      @display.incrementTime()
+
+  isTimeToRefresh: (displayedTime) ->
+    minuteDigit = @display.getLastChar(displayedTime)
+    parseInt(minuteDigit) == 9
 
   nextRefresh: ->
     time = new Date()

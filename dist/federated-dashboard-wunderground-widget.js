@@ -227,9 +227,8 @@
     };
 
     Controller.prototype.processClickedButton = function() {
-      var input;
-      input = this.display.getInput();
-      return this.displayCurrentConditions(input);
+      this.input = this.display.getInput();
+      return this.displayCurrentConditions(this.input);
     };
 
     Controller.prototype.displayCurrentConditions = function(input) {
@@ -240,9 +239,13 @@
       };
       Weather.Widgets.API.getCurrentConditions(requestData, this.display);
       if (this.refresh) {
-        this.clearActiveTimeout();
-        return this.processRefresh(input);
+        return this.initializeRefresh(input);
       }
+    };
+
+    Controller.prototype.initializeRefresh = function(input) {
+      this.clearActiveTimeout();
+      return this.processRefresh(input);
     };
 
     Controller.prototype.clearActiveTimeout = function() {
@@ -255,10 +258,27 @@
       return this.timeout = setTimeout((function(_this) {
         return function() {
           if (_this.isActive()) {
-            return _this.displayCurrentConditions(input);
+            return _this.refreshCurrentConditions(input);
           }
         };
       })(this), this.nextRefresh());
+    };
+
+    Controller.prototype.refreshCurrentConditions = function(input) {
+      var displayedTime;
+      displayedTime = this.display.getDisplayedTime();
+      if (this.isTimeToRefresh(displayedTime)) {
+        return this.displayCurrentConditions(input);
+      } else {
+        this.initializeRefresh(input);
+        return this.display.incrementTime();
+      }
+    };
+
+    Controller.prototype.isTimeToRefresh = function(displayedTime) {
+      var minuteDigit;
+      minuteDigit = this.display.getLastChar(displayedTime);
+      return parseInt(minuteDigit) === 9;
     };
 
     Controller.prototype.nextRefresh = function() {
@@ -356,6 +376,27 @@
       return $(this.container).remove();
     };
 
+    Display.prototype.getDisplayedTime = function() {
+      return $("" + this.container + " [data-id=weather-time]").text();
+    };
+
+    Display.prototype.incrementTime = function() {
+      var currentTime, incrementedDigit, incrementedTime, minutesDigit;
+      currentTime = this.getDisplayedTime();
+      minutesDigit = this.getLastChar(currentTime);
+      incrementedDigit = parseInt(minutesDigit) + 1;
+      incrementedTime = currentTime.replace(/\d$/, incrementedDigit);
+      return this.setTime(incrementedTime);
+    };
+
+    Display.prototype.getLastChar = function(str) {
+      return str[str.length - 1];
+    };
+
+    Display.prototype.setTime = function(time) {
+      return $("" + this.container + " [data-id=weather-time]").text(time);
+    };
+
     return Display;
 
   })();
@@ -398,7 +439,7 @@
     };
 
     Templates.renderCurrentConditions = function(weatherObj) {
-      return _.template("<div class=\"weather-location-container\">\n  <p class=\"weather-location\"><%= location %> </p>\n  <p class=\"weather-local-time\">\n    <span class=\"weather-time\"><%= localTime %></span>\n    <span class=\"weather-am-pm\"><%= amOrPm %></span>\n  </p>\n</div>\n<div class=\"weather-information-container\">\n  <img class=\"weather-description-icon\" src='<%= iconUrl %>'>\n  <p class=\"weather-temperature\"><%= temperature %></p>\n</div>", weatherObj);
+      return _.template("<div class=\"weather-location-container\">\n  <p class=\"weather-location\"><%= location %> </p>\n  <p class=\"weather-local-time\">\n    <span class=\"weather-time\" data-id=\"weather-time\"><%= localTime %></span>\n    <span class=\"weather-am-pm\"><%= amOrPm %></span>\n  </p>\n</div>\n<div class=\"weather-information-container\">\n  <img class=\"weather-description-icon\" src='<%= iconUrl %>'>\n  <p class=\"weather-temperature\"><%= temperature %></p>\n</div>", weatherObj);
     };
 
     return Templates;
