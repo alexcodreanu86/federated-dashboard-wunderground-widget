@@ -85,10 +85,10 @@ class Weather.Widgets.Controller
     $("#{@container} [data-id=weather-button]").unbind('click')
     $("#{@container} [data-id=weather-close]").unbind('click')
 
-  hideForm: ->
+  exitEditMode: ->
     @display.exitEditMode()
 
-  showForm: ->
+  enterEditMode: ->
     @display.enterEditMode()
 
   getContainer: ->

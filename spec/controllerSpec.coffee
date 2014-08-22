@@ -43,18 +43,18 @@ describe "Weather.Controller", ->
     setupWidgetIn('#sandbox')
     expect(Weather.Controller.getWidgets().length).toEqual(1)
 
-  it "hideForms is hiding the forms of all the widgets that are initialized", ->
+  it "exitEditMode is hiding the forms of all the widgets that are initialized", ->
     resetWidgetsContainer()
     setupTwoWidgetsInContainers()
-    Weather.Controller.hideForms()
+    Weather.Controller.exitEditMode()
     expect($("#{container1} [data-id=weather-form]").attr('style')).toEqual('display: none;')
     expect($("#{container2} [data-id=weather-form]").attr('style')).toEqual('display: none;')
 
-  it "showForms is showing the forms of all the widgets that are initialized", ->
+  it "enterEditMode is showing the forms of all the widgets that are initialized", ->
     resetWidgetsContainer()
     setupTwoWidgetsInContainers()
-    Weather.Controller.hideForms()
-    Weather.Controller.showForms()
+    Weather.Controller.exitEditMode()
+    Weather.Controller.enterEditMode()
     expect($("#{container1} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
     expect($("#{container2} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
 
@@ -75,5 +75,5 @@ describe "Weather.Controller", ->
     resetWidgetsContainer()
     setupTwoWidgetsInContainers()
     Weather.Controller.widgets[0].setAsInactive()
-    Weather.Controller.allWidgetsExecute('hideForm')
+    Weather.Controller.allWidgetsExecute('exitEditMode')
     expect(Weather.Controller.widgets.length).toBe(1)
