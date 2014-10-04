@@ -37,8 +37,8 @@ describe "Weather.Widget.Display", ->
     display2 = newDisplay(container2)
     display1.setupWidget()
     display2.setupWidget()
-    $("#{container1} [name=weather-search]").val("text1")
-    $("#{container2} [name=weather-search]").val("text2")
+    $("#{container1} [name=widget-input]").val("text1")
+    $("#{container2} [name=widget-input]").val("text2")
     expect(display1.getInput()).toEqual("text1")
     expect(display2.getInput()).toEqual("text2")
 
@@ -49,38 +49,8 @@ describe "Weather.Widget.Display", ->
     display.setupWidget()
     display2.setupWidget()
     display.showCurrentWeather(weatherObj)
-    expect($("#{container1} [data-id=weather-output]")).toContainText('Niles')
-    expect($("#{container2} [data-id=weather-output]")).not.toContainText('Niles')
-
-  it "exitEditMode is hiding the form", ->
-    setupOneContainer()
-    display = newDisplay(container1)
-    display.setupWidget()
-    display.exitEditMode()
-    expect($("#{container1} [data-id=weather-form]").attr('style')).toEqual('display: none;')
-
-  it "exitEditMode is hiding the close-widget x", ->
-    setupOneContainer()
-    display = newDisplay(container1)
-    display.setupWidget()
-    display.exitEditMode()
-    expect($("#{container1} [data-id=weather-close]").attr('style')).toEqual('display: none;')
-
-  it "enterEditMode is showing the form", ->
-    setupOneContainer()
-    display = newDisplay(container1)
-    display.setupWidget()
-    display.exitEditMode()
-    display.enterEditMode()
-    expect($("#{container1} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
-
-  it "enterEditMode is showing the close-widget x", ->
-    setupOneContainer()
-    display = newDisplay(container1)
-    display.setupWidget()
-    display.exitEditMode()
-    display.enterEditMode()
-    expect($("#{container1} [data-id=weather-close]").attr('style')).not.toEqual('display: none;')
+    expect($("#{container1} [data-name=widget-output]")).toContainText('Niles')
+    expect($("#{container2} [data-name=widget-output]")).not.toContainText('Niles')
 
   it "removeWidget is removing the widget's content", ->
     setupOneContainer()

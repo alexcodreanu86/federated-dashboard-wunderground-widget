@@ -30,8 +30,10 @@ class Weather.Widgets.Controller
     @activeStatus
 
   bind: ->
-    $("#{@container} [data-id=weather-button]").click(=> @processClickedButton())
-    $("#{@container} [data-id=weather-close]").click(=> @closeWidget())
+    $("#{@container} [data-name=widget-form]").submit (e) =>
+      e.preventDefault()
+      @processClickedButton()
+    $("#{@container} [data-name=widget-close]").click => @closeWidget()
 
   processClickedButton: ->
     @input = @display.getInput()
@@ -82,14 +84,5 @@ class Weather.Widgets.Controller
     @display.removeWidget()
 
   unbind: ->
-    $("#{@container} [data-id=weather-button]").unbind('click')
-    $("#{@container} [data-id=weather-close]").unbind('click')
-
-  exitEditMode: ->
-    @display.exitEditMode()
-
-  enterEditMode: ->
-    @display.enterEditMode()
-
-  getContainer: ->
-    @container
+    $("#{@container} [data-name=widget-form]").unbind('submit')
+    $("#{@container} [data-name=widget-close]").unbind('click')

@@ -48,62 +48,8 @@
   Weather.Controller = (function() {
     function Controller() {}
 
-    Controller.widgets = [];
-
     Controller.setupWidgetIn = function(settings) {
-      var widget;
-      widget = new Weather.Widgets.Controller(settings);
-      widget.initialize();
-      return this.addToWidgetsContainer(widget);
-    };
-
-    Controller.addToWidgetsContainer = function(widget) {
-      return this.widgets.push(widget);
-    };
-
-    Controller.getWidgets = function() {
-      return this.widgets;
-    };
-
-    Controller.exitEditMode = function() {
-      return this.allWidgetsExecute("exitEditMode");
-    };
-
-    Controller.enterEditMode = function() {
-      return this.allWidgetsExecute("enterEditMode");
-    };
-
-    Controller.allWidgetsExecute = function(command) {
-      return _.each(this.widgets, (function(_this) {
-        return function(widget) {
-          if (widget.isActive()) {
-            return widget[command]();
-          } else {
-            return _this.removeFromWidgetsContainer(widget);
-          }
-        };
-      })(this));
-    };
-
-    Controller.closeWidgetInContainer = function(container) {
-      var widget;
-      widget = _.filter(this.widgets, function(widget, index) {
-        return widget.container === container;
-      })[0];
-      if (widget) {
-        this.closeWidget(widget);
-        return this.removeFromWidgetsContainer(widget);
-      }
-    };
-
-    Controller.removeFromWidgetsContainer = function(widgetToRemove) {
-      return this.widgets = _.reject(this.widgets, function(widget) {
-        return widget === widgetToRemove;
-      });
-    };
-
-    Controller.closeWidget = function(widget) {
-      return widget.closeWidget();
+      return new Weather.Widgets.Controller(settings).initialize();
     };
 
     return Controller;
@@ -214,12 +160,13 @@
     };
 
     Controller.prototype.bind = function() {
-      $("" + this.container + " [data-id=weather-button]").click((function(_this) {
-        return function() {
+      $("" + this.container + " [data-name=widget-form]").submit((function(_this) {
+        return function(e) {
+          e.preventDefault();
           return _this.processClickedButton();
         };
       })(this));
-      return $("" + this.container + " [data-id=weather-close]").click((function(_this) {
+      return $("" + this.container + " [data-name=widget-close]").click((function(_this) {
         return function() {
           return _this.closeWidget();
         };
@@ -298,20 +245,8 @@
     };
 
     Controller.prototype.unbind = function() {
-      $("" + this.container + " [data-id=weather-button]").unbind('click');
-      return $("" + this.container + " [data-id=weather-close]").unbind('click');
-    };
-
-    Controller.prototype.exitEditMode = function() {
-      return this.display.exitEditMode();
-    };
-
-    Controller.prototype.enterEditMode = function() {
-      return this.display.enterEditMode();
-    };
-
-    Controller.prototype.getContainer = function() {
-      return this.container;
+      $("" + this.container + " [data-name=widget-form]").unbind('submit');
+      return $("" + this.container + " [data-name=widget-close]").unbind('click');
     };
 
     return Controller;
@@ -336,40 +271,14 @@
     };
 
     Display.prototype.getInput = function() {
-      return $("" + this.container + " [name=weather-search]").val();
+      return $("" + this.container + " [name=widget-input]").val();
     };
 
     Display.prototype.showCurrentWeather = function(weatherObj) {
       var formatedResponse, weatherHtml;
       formatedResponse = Weather.Widgets.ResponseFormater.process(weatherObj);
       weatherHtml = Weather.Widgets.Templates.renderCurrentConditions(formatedResponse);
-      return $("" + this.container + " [data-id=weather-output]").html(weatherHtml);
-    };
-
-    Display.prototype.exitEditMode = function() {
-      this.hideForm();
-      return this.hideCloseWidget();
-    };
-
-    Display.prototype.hideForm = function() {
-      return $("" + this.container + " [data-id=weather-form]").hide(this.animationSpeed);
-    };
-
-    Display.prototype.hideCloseWidget = function() {
-      return $("" + this.container + " [data-id=weather-close]").hide(this.animationSpeed);
-    };
-
-    Display.prototype.enterEditMode = function() {
-      this.showForm();
-      return this.showCloseWidget();
-    };
-
-    Display.prototype.showForm = function() {
-      return $("" + this.container + " [data-id=weather-form]").show(this.animationSpeed);
-    };
-
-    Display.prototype.showCloseWidget = function() {
-      return $("" + this.container + " [data-id=weather-close]").show(this.animationSpeed);
+      return $("" + this.container + " [data-name=widget-output]").html(weatherHtml);
     };
 
     Display.prototype.removeWidget = function() {
@@ -435,7 +344,7 @@
     function Templates() {}
 
     Templates.renderForm = function(widgetData) {
-      return _.template("<div class=\"widget\" data-id=\"weather-widget-wrapper\">\n  <div class=\"widget-header\">\n    <h2 class=\"widget-title\">Weather</h2>\n    <span class='widget-close' data-id='weather-close'>×</span>\n    <div class=\"widget-form\" data-id=\"weather-form\">\n      <input name=\"weather-search\" type=\"text\" autofocus=\"true\">\n      <button id=\"weather\" data-id=\"weather-button\">Get current weather</button><br>\n    </div>\n  </div>\n  <div class=\"widget-body\" data-id=\"weather-output\"></div>\n</div>");
+      return _.template("<div class='widget' data-name='widget-wrapper'>\n  <div class='widget-header' data-name='sortable-handle'>\n    <h2 class=\"widget-title\">Weather</h2>\n    <span class='widget-close' data-name='widget-close'>×</span>\n    <form class='widget-form' data-name='widget-form'>\n      <input name='widget-input' type='text' autofocus='true'>\n      <button data-name=\"form-button\">Get current weather</button><br>\n    </form>\n  </div>\n  <div class=\"widget-body\" data-name=\"widget-output\"></div>\n</div>", {});
     };
 
     Templates.renderCurrentConditions = function(weatherObj) {

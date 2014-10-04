@@ -22,108 +22,95 @@ describe "Weather.Widgets.Controller", ->
 
   it "stores the container that it is initialized with", ->
     controller = newController(container)
-    expect(controller.getContainer()).toEqual(container)
+    expect(controller.container).toEqual(container)
 
-  it "stores a new instance of Weather.Widget.Display when instantiated", ->
-    controller = newController(container)
-    expect(controller.display).toBeDefined()
+  describe '#initialize', ->
+    it "sets widget up in its container", ->
+      setupOneContainer()
+      controller = newController(container)
+      controller.initialize()
+      expect($(container)).not.toBeEmpty()
 
-  it "initialize sets widget up in its container", ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    expect($(container)).not.toBeEmpty()
+    it "binds the controller", ->
+      controller = newController(container)
+      spy = spyOn(controller, 'bind')
+      controller.initialize()
+      expect(spy).toHaveBeenCalled()
 
-  it "initialize is binding the controller", ->
-    controller = newController(container)
-    spy = spyOn(controller, 'bind')
-    controller.initialize()
-    expect(spy).toHaveBeenCalled()
+    it "displays data for the default value", ->
+      controller = newController(container)
+      spy = spyOn(controller, 'displayDefault')
+      controller.initialize()
+      expect(spy).toHaveBeenCalled()
 
-  it "initialize is trying to display data for the default value", ->
-    controller = newController(container)
-    spy = spyOn(controller, 'displayDefault')
-    controller.initialize()
-    expect(spy).toHaveBeenCalled()
+    it "sets the widget as active", ->
+      setupOneContainer()
+      controller = newController(container)
+      controller.initialize()
+      expect(controller.isActive()).toBe(true)
 
-  it "initialize is setting the widget as active", ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    expect(controller.isActive()).toBe(true)
+  describe '#displayDefault', ->
+    it "loads data when there is a default value", ->
+      controller = newController(container, defaultValue)
+      spy = spyOn(Weather.Widgets.API, 'getCurrentConditions')
+      controller.displayDefault()
+      expect(spy).toHaveBeenCalledWith(requestData, controller.display)
 
-  it "displayDefault is loading data when there is a default value", ->
-    controller = newController(container, defaultValue)
-    spy = spyOn(Weather.Widgets.API, 'getCurrentConditions')
-    controller.displayDefault()
-    expect(spy).toHaveBeenCalledWith(requestData, controller.display)
+    it "does NOT load data when no default value is provided", ->
+      controller = newController(container)
+      spy = spyOn(Weather.Widgets.API, 'getCurrentConditions')
+      controller.displayDefault()
+      expect(spy).not.toHaveBeenCalled()
 
-  it "displayDefault doesn't do anything when no default value is provided", ->
-    controller = newController(container)
-    spy = spyOn(Weather.Widgets.API, 'getCurrentConditions')
-    controller.displayDefault()
-    expect(spy).not.toHaveBeenCalled()
+  describe '#bind', ->
+    it "displays the weather when the button is clicked", ->
+      setupOneContainer()
+      controller = newController(container)
+      controller.initialize()
+      spy = spyOn(Weather.Widgets.API, 'getCurrentConditions')
+      $("#{container} [name=widget-input]").val("60714")
+      $("#{container} [data-name=form-button]").click()
+      expect(spy).toHaveBeenCalledWith(requestData, controller.display)
 
-  it "bind is displaying the weather when the button is clicked", ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    spy = spyOn(Weather.Widgets.API, 'getCurrentConditions')
-    $("#{container} [name=weather-search]").val("60714")
-    $("#{container} [data-id=weather-button]").click()
-    expect(spy).toHaveBeenCalledWith(requestData, controller.display)
+    it "removes the widget when close-widget button is clicked", ->
+      setupOneContainer()
+      controller = newController(container)
+      controller.initialize()
+      $("#{container} [data-name=widget-close]").click()
+      expect(container).not.toBeInDOM()
 
-  it "bind removes the widget when close-widget button is clicked", ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    $("#{container} [data-id=weather-close]").click()
-    expect(container).not.toBeInDOM()
+  describe '#unbind', ->
+    it 'unbinds the weather button click processing', ->
+      setupOneContainer()
+      controller = newController(container)
+      controller.initialize()
+      spy = spyOn($.prototype, 'unbind')
+      controller.unbind()
 
-  it 'unbind is unbinding the weather button click processing', ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    controller.unbind()
-    $("#{container} [data-id=weather-button]").click()
-    expect($('[data-id=weather-output]')).toBeEmpty()
+      expect(spy).toHaveBeenCalledWith('submit')
 
-  it "unbind is unbinding close widget button processing", ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    controller.unbind()
-    $("#{container} [data-id=weather-close]").click()
-    expect($(container)).not.toBeEmpty()
+    it "unbinds close widget button processing", ->
+      setupOneContainer()
+      controller = newController(container)
+      controller.initialize()
+      controller.unbind()
+      $("#{container} [data-name=widget-close]").click()
+      expect($(container)).not.toBeEmpty()
 
-  it 'closeWidget is unbinding the controller', ->
-    setupOneContainer()
-    controller = newController(container)
-    spy = spyOn(controller, 'unbind')
-    controller.closeWidget()
-    expect(spy).toHaveBeenCalled()
+  describe '#closeWidget', ->
+    it 'unbinds the controller', ->
+      setupOneContainer()
+      controller = newController(container)
+      spy = spyOn(controller, 'unbind')
+      controller.closeWidget()
+      expect(spy).toHaveBeenCalled()
 
-  it 'closeWidget is setting the widget as inactive', ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    controller.closeWidget()
-    expect(controller.isActive()).toBe(false)
-
-  it "exitEditMode is hiding the form", ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    controller.exitEditMode()
-    expect($("#{container} [data-id=weather-form]").attr('style')).toEqual('display: none;')
-
-  it "enterEditMode is showing the form", ->
-    setupOneContainer()
-    controller = newController(container)
-    controller.initialize()
-    controller.exitEditMode()
-    controller.enterEditMode()
-    expect($("#{container} [data-id=weather-form]").attr('style')).not.toEqual('display: none;')
+    it 'sets the widget as inactive', ->
+      setupOneContainer()
+      controller = newController(container)
+      controller.initialize()
+      controller.closeWidget()
+      expect(controller.isActive()).toBe(false)
 
   it "removeContent is removing the widget's content", ->
     setupOneContainer()
@@ -157,7 +144,7 @@ describe "Weather.Widgets.Controller", ->
       controller.closeWidget()
       jasmine.clock().uninstall()
 
-    it "will not refresh if widget is closed", ->
+    it "does NOT refresh if widget is closed", ->
       controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
       controller.initialize()
       controller.displayCurrentConditions('Niles IL')
@@ -166,7 +153,7 @@ describe "Weather.Widgets.Controller", ->
       jasmine.clock().tick(oneMinute)
       expect(spy.calls.count()).toBe(1)
 
-    it "will execute only once if widget refresh is not true", ->
+    it "executes only once if widget refresh is not true", ->
       controller = newController(container)
       controller.initialize()
       controller.displayCurrentConditions('Niles IL')
@@ -174,7 +161,7 @@ describe "Weather.Widgets.Controller", ->
       jasmine.clock().tick(oneMinute)
       expect(spy.calls.count()).toBe(1)
 
-    it "will refresh only with the new search when a new one is submitted", ->
+    it "refreshes only with the new search when a new one is submitted", ->
       controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
       controller.initialize()
       controller.displayCurrentConditions('Niles IL')
@@ -183,7 +170,7 @@ describe "Weather.Widgets.Controller", ->
       nextRefresh = (60 - new Date().getSeconds()) * 1000
       jasmine.clock().tick(10 * oneMinute + 100)
 
-    it "refresh will get new information every 10 minutes", ->
+    it "gets new information every 10 minutes", ->
       setupOneContainer()
       controller = new Weather.Widgets.Controller({container: container,key: key ,refresh: true})
       controller.initialize()
